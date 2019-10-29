@@ -3,27 +3,25 @@
 
     if(isset($_POST['signupBtn'])){
 
-        $form_error = array
+        $username = $_POST['username'];
+        $email = $_POST['email'];
+        $password = $_POST['password'];
 
-        if (isset($_POST['email']) && isset($_POST['username']) && isset($_POST['password'])){
-            $username = $_POST['username'];
-            $email = $_POST['email'];
-            $password = $_POST['password'];
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
     
-            try{
-                $query = "INSERT INTO `users` (username, password, email, join_date)
-                        VALUES (:username, :password, :email, now())";
+        try{
+            $query = "INSERT INTO `users` (username, password, email, join_date)
+                    VALUES (:username, :password, :email, now())";
     
-                $stmt = $DB_NAME->prepare($query);
-                $stmt->execute(array('username' => $username, 'email' => $email, 'password' => $password));
+            $stmt = $DB_NAME->prepare($query);
+            $stmt->execute(array(':username' => $username, ':email' => $email, ':password' => $hashed_password));
     
-                if ($stmt->rowCount() == 1){
-                    $result = "<p style='padding: 20px; color: green;'> Registration successful </P>";
-                }
+            if ($stmt->rowCount() == 1){
+                $result = "<p style='padding: 20px; color: green;'> Registration successful </P>";
             }
-            catch (PDOException $err){
+        }
+        catch (PDOException $err){
                 $result = "<p style='padding: 20px; color: red;'> Registration unsuccessful:".$err->getMessage()." </P>";
-            }
         }
     }
 ?>
