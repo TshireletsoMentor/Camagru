@@ -1,24 +1,29 @@
 <?php
     include_once "config/connect.php";
 
-    if (isset($_POST['email']) && isset($_POST['username']) && isset($_POST['password'])){
-        $username = $_POST['username'];
-        $email = $_POST['email'];
-        $password = $_POST['password'];
+    if(isset($_POST['signupBtn'])){
 
-        try{
-            $query = "INSERT INTO `users` (username, password, email, join_date)
-                    VALUES (:username, :password, :email, now())";
+        $form_error = array
 
-            $stmt = $DB_NAME->prepare($query);
-            $stmt->execute(array('username' => $username, 'email' => $email, 'password' => $password));
-
-            if ($stmt->rowCount() == 1){
-                $result = "<p style='padding: 20px; color: green;'> Registration successful </P>";
+        if (isset($_POST['email']) && isset($_POST['username']) && isset($_POST['password'])){
+            $username = $_POST['username'];
+            $email = $_POST['email'];
+            $password = $_POST['password'];
+    
+            try{
+                $query = "INSERT INTO `users` (username, password, email, join_date)
+                        VALUES (:username, :password, :email, now())";
+    
+                $stmt = $DB_NAME->prepare($query);
+                $stmt->execute(array('username' => $username, 'email' => $email, 'password' => $password));
+    
+                if ($stmt->rowCount() == 1){
+                    $result = "<p style='padding: 20px; color: green;'> Registration successful </P>";
+                }
             }
-        }
-        catch (PDOException $err){
-            $result = "<p style='padding: 20px; color: red;'> Registration unsuccessful:".$err->getMessage()." </P>";
+            catch (PDOException $err){
+                $result = "<p style='padding: 20px; color: red;'> Registration unsuccessful:".$err->getMessage()." </P>";
+            }
         }
     }
 ?>
@@ -43,7 +48,7 @@
             <tr><td>Email:</td><td><input type="email" value="" name="email" required></td></tr>
             <tr><td>Username:</td><td><input type="text" value="" name="username" required></td></tr>
             <tr><td>Password:</td><td><input type="password" value="" name="password" required></td></tr>
-            <tr><td></td><td><input style="float: right;" type="submit" value="sign up"></td></tr>
+            <tr><td></td><td><input style="float: right;" type="submit" name="signupBtn" value="Sign up"></td></tr>
         </table>
     </form>
     <p><a href="index.php">Back</a></p>
