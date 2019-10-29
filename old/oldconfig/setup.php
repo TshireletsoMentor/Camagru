@@ -19,9 +19,8 @@ try {
         `id` INT AUTO_INCREMENT PRIMARY KEY,
         `username` VARCHAR(20) NOT NULL,
         `password` VARCHAR(255) NOT NULL,
-        `email` VARCHAR(100) NOT NULL UNIQUE,
-        `join_date` TIMESTAMP
-        )";
+        `email` VARCHAR(100) NOT NULL,
+        `verified` VARCHAR(1) NOT NULL DEFAULT 'N')";
         $conn->exec($query);
         echo "<p style='padding: 20px; color:green;'> Table: users, created\n</p>";
     } 
