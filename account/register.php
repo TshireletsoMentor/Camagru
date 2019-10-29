@@ -6,6 +6,6 @@ if(isset($_POST['email']) && isset($_POST['email']) && isset($_POST['username'])
   $username = $_POST['username'];
   $password = $_POST['password'];
 
-  $sql = "INSERT INTO ``"
+  $sql = "INSERT INTO `users` (username, email, password, verified)`";
 }
 ?>

@@ -9,7 +9,7 @@
 </head>
 <body >
     <div class="middle_block">
-      <div class="sign_up" style="background:rgb(157, 187, 243);">
+      <div class="sign_up" style="background:rgb(232, 236, 243);">
         <form action="register.php" method="post">
           <table>
             <tr><td class="camagru">Camagru</td></tr>
