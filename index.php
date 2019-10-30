@@ -1,3 +1,8 @@
+<?php
+    include_once "session.php";
+    include_once "config/connect.php";
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,8 +14,12 @@
 <body>
     <h2> User Authentication system </h2><hr>
 
-    <p>Your are currently noy signed in <a href="login.php">login</a>
+    <?php if(!isset($_SESSION['username'])): ?>
+    <p>Your are currently not signed in <a href="login.php">login</a>
         Not a member yet?<a href="register.php">Sign up</a></p>
-    <p>Your are logged in as {username} <a href="logout.php"></a></p>
+    <?php else: ?>
+    <p>You are logged in as <?php if(isset($_SESSION['username'])) echo $_SESSION['username']?> <a href="logout.php">logout</a></p>
+    <?php endif ?>
+
 </body>
 </html>

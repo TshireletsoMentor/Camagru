@@ -1,27 +1,45 @@
 <?php
     include_once "config/connect.php";
+    include_once "config/util.php";
 
     if(isset($_POST['signupBtn'])){
 
-        $username = $_POST['username'];
-        $email = $_POST['email'];
-        $password = $_POST['password'];
+        $form_errors = array();
 
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        $required_fields = array ('email', 'username', 'password');
+
+        //$form_errors = array_merge($form_errors, check_spaces($required_fields));
+
+        $fields_to_check_length = array ('username' => 5, 'password' => 6);
+
+        $form_errors = array_merge($form_errors, check_min_length($fields_to_check_length));
+
+        $form_errors = array_merge($form_errors, check_email($_POST));
+
+        if (empty($form_errors)){
+            $username = $_POST['username'];
+            $email = $_POST['email'];
+            $password = $_POST['password'];
     
-        try{
-            $query = "INSERT INTO `users` (username, password, email, join_date)
-                    VALUES (:username, :password, :email, now())";
-    
-            $stmt = $DB_NAME->prepare($query);
-            $stmt->execute(array(':username' => $username, ':email' => $email, ':password' => $hashed_password));
-    
-            if ($stmt->rowCount() == 1){
-                $result = "<p style='padding: 20px; color: green;'> Registration successful </P>";
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        
+            try{
+                $query = "INSERT INTO `users` (username, password, email, join_date)
+                        VALUES (:username, :password, :email, now())";
+        
+                $stmt = $DB_NAME->prepare($query);
+                $stmt->execute(array(':username' => $username, ':email' => $email, ':password' => $hashed_password));
+        
+                if ($stmt->rowCount() == 1){
+                    $result = "<p style='padding: 20px; color: green;'> Registration successful </P>";
+                }
+            }
+            catch (PDOException $err){
+                    $result = "<p style='padding: 20px; color: red;'> Registration unsuccessful:".$err->getMessage()." </P>";
             }
         }
-        catch (PDOException $err){
-                $result = "<p style='padding: 20px; color: red;'> Registration unsuccessful:".$err->getMessage()." </P>";
+        else{
+            $result = "<p style='color:red;'> Error(s): " .count($form_errors). "<br>";
         }
     }
 ?>
@@ -38,9 +56,10 @@
     <h2>User Authentication System</h2><hr>
     <h3>Registration form</h3>
 
-    <?PHP
-    if(isset($result)) echo $result;
-    ?>
+    <?PHP if(isset($result)) echo $result; ?>
+    <?php if(!empty($form_errors))echo show_errors($form_errors);?>
+        
+
     <form action="" method="post">
         <table>
             <tr><td>Email:</td><td><input type="email" value="" name="email" required></td></tr>
