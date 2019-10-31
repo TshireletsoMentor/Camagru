@@ -80,10 +80,10 @@ else{
     <?php if(!empty($form_errors))echo show_errors($form_errors);?>
     <form action="" method="post">
         <table>
-            <tr><td>Email:</td> <td><input type="email" value="" name="email" required></td></tr>
-            <tr><td>New Password:</td> <td><input type="password" value="" name="new_password" required  oninvalid="this.setCustomValidity('Enter New password of atleast six characters')"
+            <tr><td>Email:</td> <td><input type="email" value="" name="email" placeholder="Email" required></td></tr>
+            <tr><td>New Password:</td> <td><input type="password" value="" name="new_password" placeholder="New Password" required  oninvalid="this.setCustomValidity('Enter New password of atleast six characters')"
               oninput="this.setCustomValidity('')"></td></tr>
-            <tr><td>Confirm Password:</td> <td><input type="password" value="" name="confirm_password" required ></td></tr>
+            <tr><td>Confirm Password:</td> <td><input type="password" value="" name="confirm_password" placeholder="Confirm Password" required ></td></tr>
             <tr><td></td><td><input style='float:right'type="submit" name="passwordResetBtn" value="Reset Password"></td></tr>
         </table>
     </form>

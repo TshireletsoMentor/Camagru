@@ -44,8 +44,8 @@
     <?php if(isset($result)) echo $result;?>
     <form action="" method="post">
         <table>
-            <tr><td>Username:</td><td><input type="text" value="" name="username" required></td></tr>
-            <tr><td>Password:</td><td><input type="password" value="" name="password" required></td></tr>
+            <tr><td>Username:</td><td><input type="text" value="" name="username" placeholder="Username" required></td></tr>
+            <tr><td>Password:</td><td><input type="password" value="" name="password" placeholder="Password" required></td></tr>
             <tr><td><a href="register.php">Sign up</a></td><td><input style="float: right;" type="submit" name="loginBtn" value="log in"></td></tr>
         </table>
     </form>

@@ -69,9 +69,9 @@
 
     <form action="" method="post">
         <table>
-            <tr><td>Email:</td><td><input type="email" value="" name="email" required></td></tr>
-            <tr><td>Username:</td><td><input type="text" value="" name="username" required></td></tr>
-            <tr><td>Password:</td><td><input type="password" value="" name="password" required oninvalid="this.setCustomValidity('Enter password of atleast six characters and contains at least one uppercase character')"
+            <tr><td>Email:</td><td><input type="email" value="" name="email" placeholder="Email" required></td></tr>
+            <tr><td>Username:</td><td><input type="text" value="" name="username" placeholder="Username" required></td></tr>
+            <tr><td>Password:</td><td><input type="password" value="" name="password" placeholder="Password" required oninvalid="this.setCustomValidity('Enter password of atleast six characters and contains at least one uppercase character')"
               oninput="this.setCustomValidity('')"></td></tr>
             <tr><td></td><td><input style="float: right;" type="submit" name="signupBtn" value="Sign up"></td></tr>
         </table>
