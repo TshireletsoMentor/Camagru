@@ -18,7 +18,7 @@
     <p>Your are currently not signed in <a href="login.php">login</a>.
         Not a member yet? <a href="register.php">Sign up</a>.</p>
     <?php else: ?>
-    <p>You are logged in as <?php if(isset($_SESSION['username'])) echo $_SESSION['username']?> <a href="logout.php">logout</a></p>
+    <p>You are logged in as <?php if(isset($_SESSION['username'])) echo $_SESSION['username']?><hr><a href="forgot_password.php">Change Password?</a><br><a href="logout.php">logout</a></p>
     <?php endif ?>
 
 </body>

@@ -16,10 +16,17 @@
 
         $form_errors = array_merge($form_errors, check_email($_POST));
 
-        if (empty($form_errors)){
-            $username = $_POST['username'];
-            $email = $_POST['email'];
-            $password = $_POST['password'];
+        $username = $_POST['username'];
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+
+        if(duplicate("users", "email", $email, $DB_NAME)){
+            $result = flashMessage("Email address is already in use");
+        }
+        else if(duplicate("users", "username", $username, $DB_NAME)){
+            $result = flashMessage("Username already exists");
+        }
+        else if (empty($form_errors)){
     
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
         
@@ -31,15 +38,15 @@
                 $stmt->execute(array(':username' => $username, ':email' => $email, ':password' => $hashed_password));
         
                 if ($stmt->rowCount() == 1){
-                    $result = "<p style='padding: 20px; color: green;'> Registration successful </P>";
+                    $result = flashMessage('Registration successful', 'Pass');
                 }
             }
             catch (PDOException $err){
-                    $result = "<p style='padding: 20px; color: red;'> Registration unsuccessful:".$err->getMessage()." </P>";
+                    $result = flashMessage('Registration unsuccessful '.$err->getMessage());
             }
         }
         else{
-            $result = "<p style='color:red;'> Error(s): " .count($form_errors). "<br>";
+            $result = flashMessage("Error(s): ".count($form_errors)."<br>");
         }
     }
 ?>
@@ -64,7 +71,8 @@
         <table>
             <tr><td>Email:</td><td><input type="email" value="" name="email" required></td></tr>
             <tr><td>Username:</td><td><input type="text" value="" name="username" required></td></tr>
-            <tr><td>Password:</td><td><input type="password" value="" name="password" required></td></tr>
+            <tr><td>Password:</td><td><input type="password" value="" name="password" required oninvalid="this.setCustomValidity('Enter password of atleast six characters and contains at least one uppercase character')"
+              oninput="this.setCustomValidity('')"></td></tr>
             <tr><td></td><td><input style="float: right;" type="submit" name="signupBtn" value="Sign up"></td></tr>
         </table>
     </form>

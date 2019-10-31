@@ -49,4 +49,35 @@
         $errors .= "</ul></p>";
         return $errors;
     }
+
+    function flashMessage($message, $passOrfail = "Fail"){
+        if($passOrfail === "Pass"){
+            $data = "<p style='padding:10px; border: 1px solid gray; color: green;'>{$message}</p>";
+        }
+        else{
+            $data = "<p style='padding:10px; border: 1px solid gray; color: red;'>{$message}</p>";
+        }
+        return $data;
+    }
+
+    function redirecto($page){
+        header("location: {$page}.php");
+    }
+
+    //best function ever
+    function duplicate($table, $column_name, $value, $DB_NAME){
+        try{
+            $query = "SELECT username FROM ".$table." WHERE ".$column_name." = :".$column_name;
+            $stmt = $DB_NAME->prepare($query);
+            $stmt->execute(array(":".$column_name => $value));
+
+            if ($row = $stmt->fetch()){
+                return true;
+            }
+            return false;
+        }
+        catch (PDOException $err){
+
+        }
+    }
 ?>

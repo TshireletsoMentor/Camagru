@@ -17,12 +17,14 @@
             $username = $row['username'];
 
             if (password_verify($password, $hashed_password)){
-                $_SESSION['id'] = $id;
-                $_SESSION['username'] = $username;
-                header("location: index.php");
+                //if (verified){}
+                    $_SESSION['id'] = $id;
+                    $_SESSION['username'] = $username;
+                    redirecto("index");
+                //else{ you need to verify check emails}
             }
             else{
-                $result = "<p style='padding:20px; color:red'>Invalid username or password </p>";
+                $result = flashMessage("Invalid username or password");
             }
         }
     }
@@ -44,7 +46,7 @@
         <table>
             <tr><td>Username:</td><td><input type="text" value="" name="username" required></td></tr>
             <tr><td>Password:</td><td><input type="password" value="" name="password" required></td></tr>
-            <tr><td></td><td><input style="float: right;" type="submit" name="loginBtn" value="log in"></td></tr>
+            <tr><td><a href="register.php">Sign up</a></td><td><input style="float: right;" type="submit" name="loginBtn" value="log in"></td></tr>
         </table>
     </form>
 </body>
