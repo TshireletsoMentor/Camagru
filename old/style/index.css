@@ -1,5 +1,6 @@
 .camagru{
-    font-family: cursive;
+    font-family: 'lobster', cursive;
+    src: url(https://fonts.googleapis.com/css);
     font-size: 60px;
     text-align: center;
 }

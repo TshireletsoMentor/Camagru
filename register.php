@@ -3,22 +3,22 @@
     include_once "config/util.php";
 
     if(isset($_POST['signupBtn'])){
-
+        $username = $_POST['username'];
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+        $confirm_password = $_POST['confirm_password'];
+        
         $form_errors = array();
 
         $required_fields = array ('email', 'username', 'password');
 
-        //$form_errors = array_merge($form_errors, check_spaces($required_fields));
+        $form_errors = array_merge($form_errors, check_input($username, $password));
 
-        $fields_to_check_length = array ('username' => 5, 'password' => 6);
+        //$fields_to_check_length = array ('username' => 5, 'password' => 6);
 
-        $form_errors = array_merge($form_errors, check_min_length($fields_to_check_length));
+        //$form_errors = array_merge($form_errors, check_min_length($fields_to_check_length));
 
         $form_errors = array_merge($form_errors, check_email($_POST));
-
-        $username = $_POST['username'];
-        $email = $_POST['email'];
-        $password = $_POST['password'];
 
         if(duplicate("users", "email", $email, $DB_NAME)){
             $result = flashMessage("Email address is already in use");
@@ -26,6 +26,11 @@
         else if(duplicate("users", "username", $username, $DB_NAME)){
             $result = flashMessage("Username already exists");
         }
+        else if ($password != $confirm_password){
+            $error = array();
+            $error[] = flashMessage("Password and Confirm password do not match.");
+            $form_errors = array_merge($form_errors, $error);
+        }  
         else if (empty($form_errors)){
     
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
@@ -65,13 +70,16 @@
 
     <?PHP if(isset($result)) echo $result; ?>
     <?php if(!empty($form_errors))echo show_errors($form_errors);?>
-        
 
     <form action="" method="post">
         <table>
-            <tr><td>Email:</td><td><input type="email" value="" name="email" placeholder="Email" required></td></tr>
-            <tr><td>Username:</td><td><input type="text" value="" name="username" placeholder="Username" required></td></tr>
-            <tr><td>Password:</td><td><input type="password" value="" name="password" placeholder="Password" required oninvalid="this.setCustomValidity('Enter password of atleast six characters and contains at least one uppercase character')"
+            <tr><td>Email:</td><td><input type="email" value="" name="email" placeholder="Email" oninvalid="this.setCustomValidity('Enter a valid email address')"
+              oninput="this.setCustomValidity('')"></td></tr>
+            <tr><td>Username:</td><td><input type="text" value="" name="username" placeholder="Username" oninvalid="this.setCustomValidity('username must be between 5-20 characters long and contain at least one number')"
+              oninput="this.setCustomValidity('')" required></td></tr>
+            <tr><td>Password:</td><td><input type="password" value="" name="password" placeholder="Password" required oninvalid="this.setCustomValidity('password must be between 6-20 characters, containing at least one uppercase character and at least one number.')"
+              oninput="this.setCustomValidity('')"></td></tr>
+            <tr><td>Confirm Password:</td><td><input type="password" value="" name="confirm_password" placeholder="Password" required oninvalid="this.setCustomValidity('password must be between 6-20 characters, containing at least one uppercase character and at least one number.')"
               oninput="this.setCustomValidity('')"></td></tr>
             <tr><td></td><td><input style="float: right;" type="submit" name="signupBtn" value="Sign up"></td></tr>
         </table>

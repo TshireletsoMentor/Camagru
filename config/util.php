@@ -1,17 +1,24 @@
 <?php
-    /*function check_spaces($required_fields_array){
+    function check_input($username, $password){
         
         $form_errors = array();
 
-        foreach($required_fields_array as $name_of_field){
-                if(strstr($name_of_field[0], ' ') != NULL){
-                    $form_errors[] = $name_of_field ." must not contain spaces.";
-                }
-            }
+        if(preg_match('/\\s/', $username)){
+            $form_errors[] = "username must not contain spaces.";
+        }
+        if(preg_match('/\\s/', $password)){
+            $form_errors[] = "password must not contain spaces.";
+        }
+        if(!preg_match('/^(?=.*\d)[a-zA-Z\d]{5,20}$/', $username)){
+            $form_errors[] = "username must be between 5-20 characters long<br> and contain at least one number.";
+        }
+        if(!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,20}$/', $password)){
+            $form_errors[] = "password must be between 6-20 characters, <br>containing at least one uppercase character and at least one number.";
+        }
         return $form_errors;
-    }*/
+    }
 
-    function check_min_length($required_to_check_length){
+    /*function check_min_length($required_to_check_length){
         
         $form_errors = array();
 
@@ -21,7 +28,7 @@
             }
         }
         return $form_errors;
-    }
+    }*/
 
     function check_email($data){
         

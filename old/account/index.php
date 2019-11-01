@@ -6,6 +6,14 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>index</title>
     <link rel="stylesheet" href="../style/index.css">
+    <link href="https://fonts.googleapis.com/css?family=Lobster&display=swap" rel="stylesheet">
+    <style>
+      .camagru{
+        font-family: 'Lobster', cursive;
+        font-size: 60px;
+        text-align: center;
+}
+    </style>
 </head>
 <body >
     <div class="middle_block">
