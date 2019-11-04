@@ -7,6 +7,7 @@
         $email = $_POST['email'];
         $password = $_POST['password'];
         $confirm_password = $_POST['confirm_password'];
+        $url = $_SERVER['HTTP_HOST'].str_replace("register.php", "", $_SERVER['REQUEST_URI']);
         
         $form_errors = array();
 
@@ -34,16 +35,18 @@
         else if (empty($form_errors)){
     
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            $token = bin2hex(random_bytes(50));
         
             try{
-                $query = "INSERT INTO `users` (username, password, email, join_date)
-                        VALUES (:username, :password, :email, now())";
+                $query = "INSERT INTO `users` (username, password, email, token, join_date)
+                        VALUES (:username, :password, :email, :token, now())";
         
                 $stmt = $DB_NAME->prepare($query);
-                $stmt->execute(array(':username' => $username, ':email' => $email, ':password' => $hashed_password));
+                $stmt->execute(array(':username' => $username, ':email' => $email, ':password' => $hashed_password, ':token' => $token));
         
                 if ($stmt->rowCount() == 1){
                     $result = flashMessage('Registration successful', 'Pass');
+                    $success = sendVerification($email, $token, $url);
                 }
             }
             catch (PDOException $err){
@@ -69,7 +72,7 @@
     <h3>Registration form</h3>
 
     <?PHP if(isset($result)) echo $result; ?>
-    <?php if(!empty($form_errors))echo show_errors($form_errors);?>
+    <?php if(!empty($form_errors)){echo show_errors($form_errors);}else{if(isset($success))echo $success;}?>
 
     <form action="" method="post">
         <table>

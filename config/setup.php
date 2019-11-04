@@ -20,8 +20,8 @@ try {
         `username` VARCHAR(25) NOT NULL UNIQUE,
         `password` VARCHAR(255) NOT NULL,
         `email` VARCHAR(100) NOT NULL UNIQUE,
-        `verified` TINYINT(1),
-        `token` VARCHAR(100),
+        `verified` VARCHAR(1) NOT NULL DEFAULT 'N',
+        `token` VARCHAR(100) NOT NULL,
         `join_date` TIMESTAMP
         )";
         $conn->exec($query);

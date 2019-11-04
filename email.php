@@ -1,15 +1,37 @@
 <?php
-    $to = "tmentor@student.wethinkcode.co.za";
-    $subject = "Camagru: Confirm Email";
-    $text = "<a href='http://127.0.0.1:8080/camagru/'>Please click the link below to confirm your account</a>";
-    $headers = "From: DoNotReply@camagru.com";
-    $mail = mail($to,$subject,$text,$headers);
-    if(empty($mail)){
-        echo "lol0";
-    }
-    if($mail){
-        echo "<p style='color:green;'> Please check email to confirm email address</p>";
-    }else{
-        echo "<p style='color:red;'> Email not Sent</p>";
-    }
+
+function sendVerification($email, $token, $url){
+
+$subject = "<i>Camagru</i> - Email Verification";
+
+$header = 'MIME-Version: 1.0'."\r\n";
+$header .= 'Content-type: text/html; charset=UTF-8'."\r\n";
+$header .= 'From: Camagru@DoNotReply.co.za'."\r\n";
+
+$message = '
+<html>
+    <head>
+        <title>'.$subject.'</title>
+    </head>
+    <body>
+        Thanks for signing up to camagru.<br>
+        To finalise the sign up process, please click the link below <br>
+        <a href="http://'.$url.'/verify.php?token='.$token.'">Verify my email</a><br>
+        Alternatively, if the link does not work, paste the url:<br> http://'.$url.'/verify.php?token='.$token.'<br>
+        If this email does not concern you, please ignore this email.
+    </body>
+';
+
+$retval = mail($email, $subject, $message, $header);
+if ($retval == true)
+    echo "Verification mail has been sent to: ".$email;
+else
+    echo "Error";
+}
+
+$email = 'tmentor@mailinator.com';
+$token = 'lol';
+$url = 'pathway';
+sendVerification($email, $token, $url);
+
 ?>
