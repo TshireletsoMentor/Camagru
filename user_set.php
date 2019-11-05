@@ -11,6 +11,8 @@
     <title>User settings</title>
 </head>
 <body>
+    <h2>User Authentication system </h2><hr>
+    <h3>User settings</h3><br>
     
 </body>
 </html>

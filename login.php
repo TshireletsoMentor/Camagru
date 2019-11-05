@@ -16,6 +16,7 @@
             $hashed_password = $row['password'];
             $username = $row['username'];
             $verified = $row['verified'];
+            $email = $row['email'];
 
             if (password_verify($password, $hashed_password)){
                 if ($verified == 'Y'){

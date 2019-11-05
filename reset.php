@@ -2,6 +2,7 @@
 include_once 'config/connect.php';
 include_once 'config/util.php';
 include_once 'session.php';
+include_once 'index.php';
 
 if(!isset($_SESSION['username'])){
     redirecto("index");
@@ -61,6 +62,12 @@ else{
             $result = flashMessage("Error(s): ".count($form_errors)."<br>");
         }
     }
+    if(isset($_POST['usernameResetBtn'])){
+        ;
+    }
+    if(isset($_POST['emailResetBtn'])){
+        ;
+    }
 }
 
 ?>
@@ -78,17 +85,44 @@ else{
     
     <h3>Password Reset Form</h3>
 
-    <?PHP if(isset($result)) echo $result; ?>
-    <?php if(!empty($form_errors))echo show_errors($form_errors);?>
+    <?php if(isset($resetPw)){?>
+        <?PHP if(isset($result)) echo $result; ?>
+        <?php if(!empty($form_errors))echo show_errors($form_errors);?>
     <form action="" method="post">
         <table>
             <tr><td>Old Password:</td> <td><input type="password" value="" name="old_password" placeholder="Old Password" required ></td></tr>
-            <tr><td>New Password:</td> <td><input type="password" value="" name="new_password" placeholder="New Password" required  oninvalid="this.setCustomValidity('Enter New password of atleast six characters')"
+            <tr><td>New Password:</td> <td><input type="password" value="" name="new_password" placeholder="New Password" required  oninvalid="this.setCustomValidity('Enter New password of between 6-20 characters, containing at least one uppercase character and at least one number.')"
               oninput="this.setCustomValidity('')"></td></tr>
             <tr><td>Confirm Password:</td> <td><input type="password" value="" name="confirm_password" placeholder="Confirm Password" required ></td></tr>
             <tr><td></td><td><input style='float:right'type="submit" name="passwordResetBtn" value="Reset Password"></td></tr>
         </table>
     </form>
+    <?php }?>
+    <?php if(isset($resetUsr)){?>
+        <?PHP if(isset($result)) echo $result; ?>
+        <?php if(!empty($form_errors))echo show_errors($form_errors);?>
+        <form action="" method="post">
+        <table>
+            <tr><td>Current username: <?php echo $_SESSION['username'];?></td><td></td></tr>
+            <tr><td>New Username:</td> <td><input type="text" value="" name="new_username" placeholder="New Username" required  oninvalid="this.setCustomValidity('Username must be between 5-20 characters long and contain at least one number')"
+              oninput="this.setCustomValidity('')"></td></tr>
+            <tr><td></td><td><input style='float:right'type="submit" name="usernameResetBtn" value="Reset username"></td></tr>
+        </table>
+        </form>;
+    <?php }?>
+    <?php if(isset($resetEmail)){?>
+        <?PHP if(isset($result)) echo $result; ?>
+        <?php if(!empty($form_errors))echo show_errors($form_errors);?>
+        <form action="" method="post">
+        <table>
+            <tr><td>Current email: <?php echo $email;?></td><td></td></tr>
+            <tr><td>New Email:</td> <td><input type="email" value="" name="new_email" placeholder="New Email" required  oninvalid="this.setCustomValidity('Enter a new valid email.')"
+              oninput="this.setCustomValidity('')"></td></tr>
+            <tr><td></td><td><input style='float:right'type="submit" name="emailResetBtn" value="Reset email"></td></tr>
+        </table>
+        </form>;;
+    <?php }?>
+
     <p><a href="index.php">Back</a></p>
 </body>
 </html>
