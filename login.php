@@ -15,13 +15,16 @@
             $id = $row['id'];
             $hashed_password = $row['password'];
             $username = $row['username'];
+            $verified = $row['verified'];
 
             if (password_verify($password, $hashed_password)){
-                //if (verified){}
+                if ($verified == 'Y'){
                     $_SESSION['id'] = $id;
                     $_SESSION['username'] = $username;
-                    redirecto("index");
-                //else{ you need to verify check emails}
+                    redirecto("index");}
+                else{ 
+                    $result = flashMessage("You need to verify your email, check your inbox");
+                }
             }
             else{
                 $result = flashMessage("Invalid username or password");

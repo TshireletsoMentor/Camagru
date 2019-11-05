@@ -25,19 +25,20 @@ else{
             $username = $_SESSION['username'];
             $password1 = $_POST['new_password'];
             $password2 = $_POST['confirm_password'];
+            $oldpassword = $_POST['old_password'];
     
             if ($password1 != $password2){
                 $result = flashMessage("New password and Confirm password do not match.");
             }   
             else{
                 try{
-                    $query = "SELECT username FROM users WHERE username = :username";
+                    $query = "SELECT username, password FROM users WHERE username = :username";
     
                     $stmt = $DB_NAME->prepare($query);
                     $stmt->execute(array(':username' => $username));
+                    $row = $stmt->fetch();
 
-
-                    if ($stmt->rowCount() == 1){
+                    if ($stmt->rowCount() == 1 && password_verify($oldpassword, $row['password'])){
                         $hased_password = password_hash($password1, PASSWORD_DEFAULT);
     
                         $queryupdate = "UPDATE users SET `password` = :password WHERE `username` = :username";
@@ -49,7 +50,7 @@ else{
                         $result = flashMessage("Password reset was successful.", "Pass");
                     }
                     else
-                        $result = flashMessage("Incorrect email address, try again.");
+                        $result = flashMessage("Incorrect old password, try again.");
                 }
                 catch (PDOException $err){
                     $result = flashMessage("An error occured.".$err->getMessage());
@@ -81,6 +82,7 @@ else{
     <?php if(!empty($form_errors))echo show_errors($form_errors);?>
     <form action="" method="post">
         <table>
+            <tr><td>Old Password:</td> <td><input type="password" value="" name="old_password" placeholder="Old Password" required ></td></tr>
             <tr><td>New Password:</td> <td><input type="password" value="" name="new_password" placeholder="New Password" required  oninvalid="this.setCustomValidity('Enter New password of atleast six characters')"
               oninput="this.setCustomValidity('')"></td></tr>
             <tr><td>Confirm Password:</td> <td><input type="password" value="" name="confirm_password" placeholder="Confirm Password" required ></td></tr>
