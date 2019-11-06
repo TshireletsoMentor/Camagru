@@ -18,6 +18,32 @@
         return $form_errors;
     }
 
+    function check_username($username){
+        
+        $form_errors = array();
+
+        if(preg_match('/\\s/', $username)){
+            $form_errors[] = "username must not contain spaces.";
+        }
+        if(!preg_match('/^(?=.*\d)[a-zA-Z\d]{5,20}$/', $username)){
+            $form_errors[] = "username must be between 5-20 characters long<br> and contain at least one number.";
+        }
+        return $form_errors;
+    }
+
+    function check_pass($password){
+        
+        $form_errors = array();
+
+        if(preg_match('/\\s/', $password)){
+            $form_errors[] = "password must not contain spaces.";
+        }
+        if(!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,20}$/', $password)){
+            $form_errors[] = "password must be between 6-20 characters, <br>containing at least one uppercase character and at least one number.";
+        }
+        return $form_errors;
+    }
+
     /*function check_min_length($required_to_check_length){
         
         $form_errors = array();
@@ -55,6 +81,16 @@
         }
         $errors .= "</ul></p>";
         return $errors;
+    }
+
+    function show_success($form_success_array){
+        $success= "<p><ul style='color:green;list-style-type:circle;'>";
+        
+        foreach($form_success_array as $the_success){
+            $success .= "<li>{$the_success}</li>";
+        }
+        $success .= "</ul></p>";
+        return $success;
     }
 
     function flashMessage($message, $passOrfail = "Fail"){

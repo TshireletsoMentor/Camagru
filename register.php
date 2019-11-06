@@ -22,17 +22,17 @@
         $form_errors = array_merge($form_errors, check_email($_POST));
 
         if(duplicate("users", "email", $email, $DB_NAME)){
-            $result = flashMessage("Email address is already in use");
+            
+            $form_errors[] = "Email address is already in use";
         }
-        else if(duplicate("users", "username", $username, $DB_NAME)){
-            $result = flashMessage("Username already exists");
+        if(duplicate("users", "username", $username, $DB_NAME)){
+            
+            $form_errors[] = "Username already exists.";
         }
-        else if ($password != $confirm_password){
-            $error = array();
-            $error[] = flashMessage("Password and Confirm password do not match.");
-            $form_errors = array_merge($form_errors, $error);
+        if ($password != $confirm_password){
+           $form_errors[] = "Password and Confirm password do not match.";
         }  
-        else if (empty($form_errors)){
+        if (empty($form_errors)){
     
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
             $token = bin2hex(random_bytes(50));

@@ -2,74 +2,95 @@
 include_once 'config/connect.php';
 include_once 'config/util.php';
 include_once 'session.php';
-include_once 'index.php';
 
 if(!isset($_SESSION['username'])){
     redirecto("index");
 }
 else{
-    if(isset($_POST['passwordResetBtn'])){
-    
-        $form_errors = array();
-    
-        $required_fields = array ('email', 'new_password', 'confirm_password');
-    
-        $form_errors = array_merge($form_errors, check_input($_SESSION['username'], $_POST['new_password']));
-    
-        //$fields_to_check_length = array ('new_password' => 6, 'confirm_password' => 6);
-    
-        //$form_errors = array_merge($form_errors, check_min_length($fields_to_check_length));
-    
-        $form_errors = array_merge($form_errors, check_email($_POST));
-        
-        if(empty($form_errors)){
-            $username = $_SESSION['username'];
-            $password1 = $_POST['new_password'];
-            $password2 = $_POST['confirm_password'];
-            $oldpassword = $_POST['old_password'];
-    
-            if ($password1 != $password2){
-                $result = flashMessage("New password and Confirm password do not match.");
-            }   
-            else{
-                try{
-                    $query = "SELECT username, password FROM users WHERE username = :username";
-    
-                    $stmt = $DB_NAME->prepare($query);
-                    $stmt->execute(array(':username' => $username));
-                    $row = $stmt->fetch();
+    $id = $_SESSION['id'];
+    if(isset($_POST['ResetBtn'])){
+        $username = htmlentities($_POST['new_username']);
+        $password1 = htmlentities($_POST['new_password']);
+        $password2 = htmlentities($_POST['retype_password']);
+        $email = htmlentities($_POST['email']);
 
-                    if ($stmt->rowCount() == 1 && password_verify($oldpassword, $row['password'])){
-                        $hased_password = password_hash($password1, PASSWORD_DEFAULT);
-    
-                        $queryupdate = "UPDATE users SET `password` = :password WHERE `username` = :username";
-    
-                        $stmt = $DB_NAME->prepare($queryupdate);
-    
-                        $stmt->execute(array(':password' => $hased_password, ':username' => $username));
-    
-                        $result = flashMessage("Password reset was successful.", "Pass");
-                    }
-                    else
-                        $result = flashMessage("Incorrect old password, try again.");
-                }
-                catch (PDOException $err){
-                    $result = flashMessage("An error occured.".$err->getMessage());
-                }
+        $form_errors = array();
+        $form_success = array();
+    }
+    if(isset($email)){
+        if(duplicate("users", "email", $email, $DB_NAME)){
+        $form_errors[] = "Email address is already in use.";
+        }
+    }
+    if(isset($username)){
+        if(duplicate("users", "username", $username, $DB_NAME)){
+        $form_errors[] = "Username is already in use";
+        }
+    }
+    if(isset($password1)){
+        if(!isset($password2)){
+            $form_errors[] = "For password reset, both password fields are required";
+        }
+        if ($password1 != $password2){
+            $form_errors[] = "Password and Retype password do not match.";
+        }
+    }
+    if(!empty($username)){
+        $form_errors = array_merge($form_errors, check_username($username));
+        if(empty($form_errors)){ 
+            try{        
+                $queryupdate1 = "UPDATE users SET `username` = :username WHERE `id` = :id";
+                $stmtupdate1 = $DB_NAME->prepare($queryupdate1);
+                $stmtupdate1->execute(array(':username' => $username, ':id' => $id));
+                $form_success[] = "Username reset was successful.";
+                $_SESSION['username'] = $username;
+            }
+            catch (PDOException $err){
+                $result = flashMessage("An error occured.".$err->getMessage());
+            }
+        }
+        else{
+                $result = flashMessage("Error(s): ".count($form_errors)."<br>");
+        }
+    }
+    if(!empty($password1) && !empty($password2)){
+        $form_errors = array_merge($form_errors, check_pass($password1));
+        if(empty($form_errors)){ 
+            try{
+                $hased_password = password_hash($password1, PASSWORD_DEFAULT);
+                $queryupdate2 = "UPDATE users SET `password` = :password WHERE `id` = :id";
+                $stmtupdate2 = $DB_NAME->prepare($queryupdate2);
+                $stmtupdate2->execute(array(':password' => $hased_password, ':id' => $id));
+                $form_success[] = "Password reset was successful.";
+            }
+            catch (PDOException $err){
+                $result = flashMessage("An error occured.".$err->getMessage());
             }
         }
         else{
             $result = flashMessage("Error(s): ".count($form_errors)."<br>");
         }
     }
-    if(isset($_POST['usernameResetBtn'])){
-        ;
+    if(!empty($email)){
+        $form_errors = array_merge($form_errors, check_email($_POST));      
+        if(empty($form_errors)){ 
+            try{
+                $queryupdate3 = "UPDATE users SET `email` = :email WHERE `id` = :id";
+                $stmtupdate3 = $DB_NAME->prepare($queryupdate3);
+                $stmtupdate3->execute(array(':email' => $email, ':id' => $id));
+                $form_success[] = "Email reset was successful.";
+                $_SESSION['email'] = $email;
+            }
+            catch (PDOException $err){
+                $result = flashMessage("An error occured.".$err->getMessage());
+            }
+        }
+        else{
+            $result = flashMessage("Error(s): ".count($form_errors)."<br>");
+        }
     }
-    if(isset($_POST['emailResetBtn'])){
-        ;
-    }
+    if(isset($form_success) && !empty($form_success)){$result = flashMessage("Update(s): ".count($form_success)."<br>", "Pass");}
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -82,46 +103,27 @@ else{
 </head>
 <body>
     <h2>User Authentication System</h2><hr>
-    
-    <h3>Password Reset Form</h3>
+    <h3>Profile update</h3>
 
-    <?php if(isset($resetPw)){?>
-        <?PHP if(isset($result)) echo $result; ?>
-        <?php if(!empty($form_errors))echo show_errors($form_errors);?>
+    <h4><?php echo $_SESSION['username']?></h4>
+
+    <?PHP if(isset($result)) echo $result; ?>
+    <?php if(!empty($form_errors)){echo show_errors($form_errors);}else{if(!empty($form_success))echo show_success($form_success);}?>
     <form action="" method="post">
         <table>
-            <tr><td>Old Password:</td> <td><input type="password" value="" name="old_password" placeholder="Old Password" required ></td></tr>
-            <tr><td>New Password:</td> <td><input type="password" value="" name="new_password" placeholder="New Password" required  oninvalid="this.setCustomValidity('Enter New password of between 6-20 characters, containing at least one uppercase character and at least one number.')"
-              oninput="this.setCustomValidity('')"></td></tr>
-            <tr><td>Confirm Password:</td> <td><input type="password" value="" name="confirm_password" placeholder="Confirm Password" required ></td></tr>
-            <tr><td></td><td><input style='float:right'type="submit" name="passwordResetBtn" value="Reset Password"></td></tr>
+            <tr><td>Username:</td> <td><input type="text" value="" name="new_username" placeholder="New Username" ></td></tr>
+            
+            <tr><td>Email:</td> <td><input type="email" value="" name="email" placeholder="New Email" ></td></tr>
+            <tr><td>Password:</td> <td><input type="password" value="" name="new_password" placeholder="New Password" ></td></tr>
+            <tr><td>Retype Password:</td> <td><input type="password" value="" name="retype_password" placeholder="Retype Password" ></td></tr>
+            <tr><td></td><td></td></tr>
+            <tr><td>Notification preference:</td><td></td></tr>
+            <tr><td>ON</td><td><input style='float:right'type="radio" name="ResetBtnON" value="ON"></td></tr>
+            <tr><td>OFF</td><td><input style='float:right'type="radio" name="ResetBtnOFF" value="OFF"></td></tr>
+            
+            <tr><td></td><td><input style='float:right'type="submit" name="ResetBtn" value="Update profile"></td></tr>
         </table>
-    </form>
-    <?php }?>
-    <?php if(isset($resetUsr)){?>
-        <?PHP if(isset($result)) echo $result; ?>
-        <?php if(!empty($form_errors))echo show_errors($form_errors);?>
-        <form action="" method="post">
-        <table>
-            <tr><td>Current username: <?php echo $_SESSION['username'];?></td><td></td></tr>
-            <tr><td>New Username:</td> <td><input type="text" value="" name="new_username" placeholder="New Username" required  oninvalid="this.setCustomValidity('Username must be between 5-20 characters long and contain at least one number')"
-              oninput="this.setCustomValidity('')"></td></tr>
-            <tr><td></td><td><input style='float:right'type="submit" name="usernameResetBtn" value="Reset username"></td></tr>
-        </table>
-        </form>;
-    <?php }?>
-    <?php if(isset($resetEmail)){?>
-        <?PHP if(isset($result)) echo $result; ?>
-        <?php if(!empty($form_errors))echo show_errors($form_errors);?>
-        <form action="" method="post">
-        <table>
-            <tr><td>Current email: <?php echo $email;?></td><td></td></tr>
-            <tr><td>New Email:</td> <td><input type="email" value="" name="new_email" placeholder="New Email" required  oninvalid="this.setCustomValidity('Enter a new valid email.')"
-              oninput="this.setCustomValidity('')"></td></tr>
-            <tr><td></td><td><input style='float:right'type="submit" name="emailResetBtn" value="Reset email"></td></tr>
-        </table>
-        </form>;;
-    <?php }?>
+        </form>
 
     <p><a href="index.php">Back</a></p>
 </body>

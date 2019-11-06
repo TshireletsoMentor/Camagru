@@ -1,4 +1,7 @@
 <?php
+include_once 'reset.php';
+
+
 
 function sendVerification($email, $token, $url){
 

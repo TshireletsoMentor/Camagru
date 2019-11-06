@@ -1,6 +1,7 @@
 <?php
     include_once "session.php";
     include_once "config/connect.php";
+    include_once "config/util.php";
 ?>
 
 <!DOCTYPE html>
@@ -19,12 +20,9 @@
         Not a member yet? <a href="register.php">Sign up</a>.<br>
         <a href="forgotpassword.php">Forgot password?</a></p>
     <?php else: ?>
-    <p>You are logged in as <?php if(isset($_SESSION['username'])) echo $_SESSION['username']?>  <a href="logout.php">logout</a></p>
-    
-    <button type="button" onclick="<a href='register.php'><?php $reserPw = '';?></a>">Reset password</button>
-    <button type="button" onclick="<a href='register.php'><?php $reserUsr = '';?></a>">Reset username</button>
-    <button type="button" onclick="<a href='register.php'><?php $reserEmail = '';?></a>">Reset email</button>
+    <p>You are logged in as <?php if(isset($_SESSION['username'])) echo $_SESSION['username']."."?><br><a href="logout.php">logout</a>
+    <br><a href="reset.php">User settings</a>
+    </p>
     <?php endif ?>
-
 </body>
 </html>

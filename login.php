@@ -22,6 +22,7 @@
                 if ($verified == 'Y'){
                     $_SESSION['id'] = $id;
                     $_SESSION['username'] = $username;
+                    $_SESSION['email'] = $email;
                     redirecto("index");}
                 else{ 
                     $result = flashMessage("You need to verify your email, check your inbox");
