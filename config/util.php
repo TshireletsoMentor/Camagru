@@ -140,7 +140,7 @@
             <body>
                 Thanks for signing up to camagru.<br>
                 To finalise the sign up process, please click the link: <br>
-                <a href="http://'.$url.'/verify.php?token='.$token.'">Verify my email</a><br>
+                <a href="http://'.$url.'verify.php?token='.$token.'">Verify my email</a><br>
                 Alternatively, if the link does not work, paste the url:<br> http://'.$url.'/verify.php?token='.$token.'<br>
                 If this email does not concern you, please ignore this email.
             </body>

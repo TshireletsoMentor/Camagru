@@ -20,8 +20,8 @@
         Not a member yet? <a href="register.php">Sign up</a>.<br>
         <a href="forgotpassword.php">Forgot password?</a></p>
     <?php else: ?>
-    <p>You are logged in as <?php if(isset($_SESSION['username'])) echo $_SESSION['username']."."?><br><a href="logout.php">logout</a>
-    <br><a href="reset.php">User settings</a>
+    <p>You are logged in as <?php if(isset($_SESSION['username'])) echo $_SESSION['username']."."?><br><a href="reset.php">User settings</a>
+    <br><a href="logout.php">Log out</a>
     </p>
     <?php endif ?>
 </body>

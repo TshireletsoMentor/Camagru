@@ -13,6 +13,9 @@ else{
         $password1 = htmlentities($_POST['new_password']);
         $password2 = htmlentities($_POST['retype_password']);
         $email = htmlentities($_POST['email']);
+        if(isset($_POST['PrefBtn'])){
+            $pref = htmlentities($_POST['PrefBtn']);
+        }
 
         $form_errors = array();
         $form_success = array();
@@ -89,6 +92,24 @@ else{
             $result = flashMessage("Error(s): ".count($form_errors)."<br>");
         }
     }
+    // this is the preference php
+    if(!empty($pref)){
+        if(empty($form_errors)){ 
+            try{
+                $queryupdate4 = "UPDATE users SET `preference` = :preference WHERE `id` = :id";
+                $stmtupdate4 = $DB_NAME->prepare($queryupdate4);
+                $stmtupdate4->execute(array(':preference' => $pref, ':id' => $id));
+                $form_success[] = "Notification preference was set to: ".$pref;
+                $_SESSION['preference'] = $pref;
+            }
+            catch (PDOException $err){
+                $result = flashMessage("An error occured.".$err->getMessage());
+            }
+        }
+        else{
+            $result = flashMessage("Error(s): ".count($form_errors)."<br>");
+        }
+    }
     if(isset($form_success) && !empty($form_success)){$result = flashMessage("Update(s): ".count($form_success)."<br>", "Pass");}
 }
 ?>
@@ -115,16 +136,17 @@ else{
             
             <tr><td>Email:</td> <td><input type="email" value="" name="email" placeholder="New Email" ></td></tr>
             <tr><td>Password:</td> <td><input type="password" value="" name="new_password" placeholder="New Password" ></td></tr>
-            <tr><td>Retype Password:</td> <td><input type="password" value="" name="retype_password" placeholder="Retype Password" ></td></tr>
+            <tr><td>Re-type Password:</td> <td><input type="password" value="" name="retype_password" placeholder="Re-type Password" ></td></tr>
             <tr><td></td><td></td></tr>
-            <tr><td>Notification preference:</td><td></td></tr>
-            <tr><td>ON</td><td><input style='float:right'type="radio" name="ResetBtnON" value="ON"></td></tr>
-            <tr><td>OFF</td><td><input style='float:right'type="radio" name="ResetBtnOFF" value="OFF"></td></tr>
+            <!-- this is the preference html -->
+            <tr><td>Notification preference:</td><td><?php echo $_SESSION['preference']?></td></tr>
+            <tr><td>ON</td><td><input style='float:right'type="radio" name="PrefBtn" value="ON"></td></tr>
+            <tr><td>OFF</td><td><input style='float:right'type="radio" name="PrefBtn" value="OFF"></td></tr>
             
             <tr><td></td><td><input style='float:right'type="submit" name="ResetBtn" value="Update profile"></td></tr>
         </table>
         </form>
-
-    <p><a href="index.php">Back</a></p>
+    <p><a href="index.php">Back</a><br><a href="logout.php">Log out</a></p>
+    
 </body>
 </html>

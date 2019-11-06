@@ -17,12 +17,14 @@
             $username = $row['username'];
             $verified = $row['verified'];
             $email = $row['email'];
+            $pref = $row['preference'];
 
             if (password_verify($password, $hashed_password)){
                 if ($verified == 'Y'){
                     $_SESSION['id'] = $id;
                     $_SESSION['username'] = $username;
                     $_SESSION['email'] = $email;
+                    $_SESSION['preference'] = $pref;
                     redirecto("index");}
                 else{ 
                     $result = flashMessage("You need to verify your email, check your inbox");

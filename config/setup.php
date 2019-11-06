@@ -22,6 +22,7 @@ try {
         `email` VARCHAR(100) NOT NULL UNIQUE,
         `verified` VARCHAR(1) NOT NULL DEFAULT 'N',
         `token` VARCHAR(100) NOT NULL,
+        `preference` VARCHAR(3) NOT NULL DEFAULT 'ON',
         `join_date` TIMESTAMP
         )";
         $conn->exec($query);
