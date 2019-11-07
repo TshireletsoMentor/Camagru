@@ -13,11 +13,11 @@
     <title>index</title>
 </head>
 <body>
-    <h2> User Authentication system </h2><hr>
+    <h2> <i>Camagru</i></h2><hr>
 
     <?php if(!isset($_SESSION['username'])): ?>
-    <p>You are currently not signed in <a href="login.php">login</a>.
-        Not a member yet? <a href="register.php">Sign up</a>.<br>
+    <p>You are currently not signed in. <hr>
+        <?php include_once 'login.php'; ?><br>
         <a href="forgotpassword.php">Forgot password?</a></p>
     <?php else: ?>
     <p>You are logged in as <?php if(isset($_SESSION['username'])) echo $_SESSION['username']."."?><br><a href="reset.php">User settings</a>

@@ -4,8 +4,8 @@
     include_once "config/util.php";
 
     if(isset($_POST['loginBtn'])){
-        $user = $_POST['username'];
-        $password = $_POST['password'];
+        $user = htmlentities($_POST['username']);
+        $password = htmlentities($_POST['password']);
 
         $query = "SELECT * FROM `users` WHERE username = :username";
         $stmt = $DB_NAME->prepare($query);
@@ -46,7 +46,6 @@
     <title>Login</title>
 </head>
 <body>
-    <h2>User Authentication System</h2><hr>
     <h3>Login form</h3>
     <?php if(isset($result)) echo $result;?>
     <form action="" method="post">

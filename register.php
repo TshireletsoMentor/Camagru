@@ -3,10 +3,10 @@
     include_once "config/util.php";
 
     if(isset($_POST['signupBtn'])){
-        $username = $_POST['username'];
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-        $confirm_password = $_POST['confirm_password'];
+        $username = htmlentities($_POST['username']);
+        $email = htmlentities($_POST['email']);
+        $password = htmlentities($_POST['password']);
+        $confirm_password = htmlentities($_POST['confirm_password']);
         $url = $_SERVER['HTTP_HOST'].str_replace("register.php", "", $_SERVER['REQUEST_URI']);
         
         $form_errors = array();
