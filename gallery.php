@@ -13,12 +13,12 @@
     <title>Gallery</title>
 </head>
 <body>
-    <form action="upload.php" method="POST" enctype="multipart/form-data">
+    <form action="upload_profile.php" method="POST" enctype="multipart/form-data">
         <input type="text" name="filename" placeholder="File name...">
         <input type="text" name="filetitle" placeholder="Image title...">
         <input type="text" name="filedesc" placeholder="Image destination...">
         <input type="file" name="file">
-        <button type="submit" name="submit">Upload</button>
+        <button type="submit" name="submit_pro">Upload</button>
     </form>    
 </body>
 </html>

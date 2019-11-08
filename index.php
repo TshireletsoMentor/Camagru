@@ -20,6 +20,7 @@
         <?php include_once 'login.php'; ?><br>
         <a href="forgotpassword.php">Forgot password?</a></p>
     <?php else: ?>
+    <?php include_once 'upload_profile.php';?>
     <p>You are logged in as <?php if(isset($_SESSION['username'])) echo $_SESSION['username']."."?><br><a href="reset.php">User settings</a>
     <br><a href="logout.php">Log out</a>
     </p>

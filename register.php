@@ -48,6 +48,14 @@
                     $result = flashMessage('Registration successful', 'Pass');
                     $success = sendVerification($email, $token, $url);
                 }
+                $query1 = "SELECT id FROM `users` WHERE username = :username";
+                $stmt1 = $DB_NAME->prepare($query1);
+                $stmt1->execute(array(':username' => $username));
+                $row = $stmt1->fetch();
+
+                $query2 = "INSERT INTO `pro_img` (userid, status) VALUES (:userid, 0)";
+                $stmt2 = $DB_NAME->prepare($query2);
+                $stmt2->execute(array(':userid' => $row['id']));
             }
             catch (PDOException $err){
                     $result = flashMessage('Registration unsuccessful '.$err->getMessage());
