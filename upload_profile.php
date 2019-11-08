@@ -26,7 +26,6 @@
                     $query = "UPDATE pro_img SET status = 1 WHERE userid = :userid";
                     $stmt = $DB_NAME->prepare($query);
                     $stmt->execute(array(':userid' => $id));
-                    //header("Location: index.php?upload_successful");
                 }
                 else
                 echo flashMessage("Uploaded file is too large, maximum file size: 50 mb.");
