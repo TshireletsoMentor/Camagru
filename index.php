@@ -13,7 +13,7 @@
     <title>index</title>
 </head>
 <body>
-    <h2> <i>Camagru</i></h2><hr>
+    <h1> <i>Camagru</i></h1><hr>
 
     <?php if(!isset($_SESSION['username'])): ?>
     <p>You are currently not signed in. <hr>
