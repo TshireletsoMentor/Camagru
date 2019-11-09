@@ -76,7 +76,7 @@
     <title>Register</title>
 </head>
 <body>
-    <h2>User Authentication System</h2><hr>
+    <h1><i>Camagru</i><hr>
     <h3>Registration form</h3>
 
     <?PHP if(isset($result)) echo $result; ?>

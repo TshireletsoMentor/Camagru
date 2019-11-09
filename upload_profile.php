@@ -18,7 +18,7 @@
         $allowed = array('jpg', 'jpeg', 'png', 'gif');
         if(in_array($fileActualExt, $allowed)){
             if($fileError === 0){
-                if($fileSize < 50000){
+                if($fileSize < 5000000){
                     $fileNameNew = "profile".$id.".".$fileActualExt;
                     $fileDestination = 'uploads/'.$fileNameNew;
                     move_uploaded_file($fileTmpName, $fileDestination);
@@ -28,7 +28,7 @@
                     $stmt->execute(array(':userid' => $id));
                 }
                 else
-                echo flashMessage("Uploaded file is too large, maximum file size: 50 mb.");
+                echo flashMessage("Uploaded file is too large, maximum file size: 5 mb.");
             }
             else
                 echo flashMessage("Error uploading file, please try again.");
@@ -49,7 +49,7 @@
                 echo flashMessage("File was not deleted!");
             }
             else{
-                echo flashMessage("File was deleted!");
+                echo flashMessage("File was deleted!", "Pass");
 
                 $query = "UPDATE pro_img SET status = 0 WHERE userid = :userid";
                 $stmt = $DB_NAME->prepare($query);
@@ -94,9 +94,10 @@
 </head>
 <body>
     <form action="" method="POST" enctype="multipart/form-data">
-        <input type="file" name="file">
-        <button type="submit" name="remove_img">Remove</button>
-        <br><button type="submit" name="upload">Upload image</button>
+        <table>
+        <tr><td><input type="file" name="file"></td><td><button type="submit" name="remove_img">Remove</button></td></tr>
+        <tr><td><button type="submit" name="upload">Upload image</button></td><td></td></tr>
+        </table>
     </form>   
 </body>
 </html>

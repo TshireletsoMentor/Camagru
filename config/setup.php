@@ -47,4 +47,19 @@ catch (PDOException $err) {
     echo "<p style='padding:20px; color:red;'> Table: pro_img not created\n".$err->getMessage()."</p>";
 }
 
+try{
+    $conn = new PDO($DB_SERVER_DB, $DB_USER, $DB_PASSWORD);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $query = "CREATE TABLE `gallery` (
+        `id` INT AUTO_INCREMENT PRIMARY KEY,
+        `userid` INT(11) NOT NULL,
+        `title` VARCHAR(255) NOT NULL,
+        `name`  VARCHAR(255) NOT NULL
+        )";
+        $conn->exec($query);
+        echo "<p style='padding: 20px; color:green;'> Table: gallery, created\n</p>";
+}
+catch (PDOException $err) {
+    echo "<p style='padding:20px; color:red;'> Table: gallery not created\n".$err->getMessage()."</p>";
+}
 ?>
