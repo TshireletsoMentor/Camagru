@@ -15,7 +15,7 @@
 <body>
     <h1><i>Camagru</i>
     <?php if(!isset($_SESSION['username'])){?>
-    <img style='width:100px;height:100px;border-radius: 50%;border: solid 2px black' src='uploads/default.jpg'></h1>
+    <img style='width:100px;height:100px;border-radius: 50%;border: solid 2px black' src='uploads/default.gif'></h1>
     <?php } ?>
     <hr>
 

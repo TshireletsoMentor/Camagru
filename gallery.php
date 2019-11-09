@@ -53,11 +53,11 @@
     <h3>Gallery</h3><br>
     <?php
     if(isset($_SESSION['id'])){?>
-    <form action="upload_profile.php" method="POST" enctype="multipart/form-data">
+    <form action="" method="POST" enctype="multipart/form-data">
         <input type="text" name="filetitle" placeholder="Image title...">
         <input type="file" name="file">
         <button type="submit" name="submit_pro">Upload</button>
     </form>
-    <?php }?>
+    <?php } ?>
 </body>
 </html>
