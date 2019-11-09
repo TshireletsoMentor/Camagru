@@ -185,7 +185,7 @@
         return($success);
     }
 
-    function sendReset2($email, $hash_password, $url){
+    function sendReset2($email, $hash_token, $url){
         $subject = "<i>[Camagru]</i> - Password Reset";
 
         $header = 'MIME-Version: 1.0'."\r\n";
@@ -199,8 +199,8 @@
             </head>
             <body>
                 Your password has been reset. To create a new password please click the link: <br>
-                <a href="http://'.$url.'forgot_password_login.php?token='.$hash_password.'">Change password</a><br>
-                Alternatively, if the link does not work, paste the url:<br> http://'.$url.'forgot_password_login.php?token='.$hash_password.'<br>
+                <a href="http://'.$url.'forgot_password_login.php?token='.$hash_token.'">Change password</a><br>
+                Alternatively, if the link does not work, paste the url:<br> http://'.$url.'forgot_password_login.php?token='.$hash_token.'<br>
                 If this email does not concern you, please ignore this email.
                 Please log on to <i>Camagru</i> and change this password.<br>
 

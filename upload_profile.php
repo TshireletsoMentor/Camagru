@@ -1,10 +1,10 @@
 <?php
     include_once 'config/connect.php';
     include_once 'session.php';
+    include_once 'config/util.php';
     
     $id = $_SESSION['id'];
-    $fileDestination;
-    if(isset($_POST['submit'])){
+    if(isset($_POST['upload'])){
         $file = $_FILES['file'];
         $fileName = $_FILES['file']['name'];
         $fileTmpName= $_FILES['file']['tmp_name'];
@@ -19,7 +19,7 @@
         if(in_array($fileActualExt, $allowed)){
             if($fileError === 0){
                 if($fileSize < 50000){
-                    $fileNameNew = uniqid('', true).".".$fileActualExt;
+                    $fileNameNew = "profile".$id.".".$fileActualExt;
                     $fileDestination = 'uploads/'.$fileNameNew;
                     move_uploaded_file($fileTmpName, $fileDestination);
                     
@@ -38,9 +38,26 @@
         }
     }
     if(isset($_POST['remove_img'])){
-        $query = "UPDATE pro_img SET status = 0 WHERE userid = :userid";
-        $stmt = $DB_NAME->prepare($query);
-        $stmt->execute(array(':userid' => $id));
+        $filename = "uploads/profile"."$id"."*";
+        if(!empty(glob($filename))){
+            $fileinfo = glob($filename);
+            $fileext = explode(".", $fileinfo[0]);
+            $fileactualext = $fileext[1];
+
+            $file_del = "uploads/profile"."$id".".".$fileactualext;
+            if(!unlink($file_del)){
+                echo flashMessage("File was not deleted!");
+            }
+            else{
+                echo flashMessage("File was deleted!");
+
+                $query = "UPDATE pro_img SET status = 0 WHERE userid = :userid";
+                $stmt = $DB_NAME->prepare($query);
+                $stmt->execute(array(':userid' => $id));
+            }
+        }
+        else
+            echo flashMessage("No file to delete!");
     }
 
     try{
@@ -48,8 +65,15 @@
         $stmt = $DB_NAME->prepare($query);
         $stmt->execute(array(':userid' => $_SESSION['id']));
         $row = $stmt->fetch();
+
         if($row['status'] == 1){
-                echo "<img style='width:100px;height:100px;border-radius: 50%;border: solid 2px black' src='".$fileDestination."'>"."<br>";  
+            $filename = "uploads/profile"."$id"."*";
+            $fileinfo = glob($filename);
+            $fileext = explode(".", $fileinfo[0]);
+            $fileactualext = $fileext[1];
+            $file_display = "uploads/profile"."$id".".".$fileactualext;
+            
+            echo "<img style='width:100px;height:100px;border-radius: 50%;border: solid 2px black' src='"."$file_display"."?'".mt_rand()."><br>";  
         }
         else{
             echo "<img style='width:100px;height:100px;border-radius: 50%;border: solid 2px black' src='uploads/default.jpg'>"."<br>";
@@ -72,7 +96,7 @@
     <form action="" method="POST" enctype="multipart/form-data">
         <input type="file" name="file">
         <button type="submit" name="remove_img">Remove</button>
-        <br><button type="submit" name="submit">Upload image</button>
+        <br><button type="submit" name="upload">Upload image</button>
     </form>   
 </body>
 </html>

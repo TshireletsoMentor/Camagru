@@ -4,7 +4,7 @@ include_once 'config/util.php';
 
 if(isset($_POST['forgotBtn'])){
     $email = htmlentities($_POST['email']);
-    $url = $_SERVER['HTTP_HOST'].str_replace("forgot_password2.php", "", $_SERVER['REQUEST_URI']);
+    $url = $_SERVER['HTTP_HOST'].str_replace("register.php", "", $_SERVER['REQUEST_URI']);
     
     $query = "SELECT * FROM `users` WHERE email = :email";
     $stmt = $DB_NAME->prepare($query);
@@ -18,13 +18,14 @@ if(isset($_POST['forgotBtn'])){
 
         if ($verified == 'Y'){
             try{
-                $token_new = bin2hex(random_bytes(50));
+                $pass = bin2hex(random_bytes(6));
+                $hased_password = password_hash($pass, PASSWORD_DEFAULT);
 
-                $queryupdate = "UPDATE users SET `token` = :token WHERE `email` = :email";
+                $queryupdate = "UPDATE users SET `password` = :password WHERE `email` = :email";
                 $stmt = $DB_NAME->prepare($queryupdate);
-                $stmt->execute(array(':token' => $token_new, ':email' => $email));
+                $stmt->execute(array(':password' => $hased_password, ':email' => $email));
 
-                $success = sendReset2($email, $token_new, $url);
+                $success = sendReset($email, $pass);
             }
             catch (PDOException $err){
                 $result = flashMessage("An error occured.".$err->getMessage());
