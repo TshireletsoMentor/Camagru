@@ -184,4 +184,36 @@
         }
         return($success);
     }
+
+    function sendReset2($email, $hash_password, $url){
+        $subject = "<i>[Camagru]</i> - Password Reset";
+
+        $header = 'MIME-Version: 1.0'."\r\n";
+        $header .= 'Content-type: text/html; charset=UTF-8'."\r\n";
+        $header .= 'From: Camagru@DoNotReply.co.za'."\r\n";
+
+        $message = '
+        <html>
+            <head>
+                <title>'.$subject.'</title>
+            </head>
+            <body>
+                Your password has been reset. To create a new password please click the link: <br>
+                <a href="http://'.$url.'forgot_password_login.php?token='.$hash_password.'">Change password</a><br>
+                Alternatively, if the link does not work, paste the url:<br> http://'.$url.'forgot_password_login.php?token='.$hash_password.'<br>
+                If this email does not concern you, please ignore this email.
+                Please log on to <i>Camagru</i> and change this password.<br>
+
+            </body>
+        ';
+
+        $retval = mail($email, $subject, $message, $header);
+        if ($retval == true){
+            $success = "<ul><li style='color:green;'>Password reset mail has been sent to ".$email."</li></ul>";
+        }
+        else{
+            echo "Error";
+        }
+        return($success);
+    }
 ?>
