@@ -13,10 +13,10 @@
     <title>index</title>
 </head>
 <body>
-    <h1><i>Camagru</i>
-    <?php if(!isset($_SESSION['username'])){?>
-    <img style='width:100px;height:100px;border-radius: 50%;border: solid 2px black' src='uploads/default.gif'></h1>
-    <?php } ?>
+    <b><i><font size="30">Camagru</font></i></b>
+    <?php if(!isset($_SESSION['username'])):?>
+    <img style='width:100px;height:100px;border-radius: 50%;border: solid 2px black' src='uploads/default.gif'></p>
+    <?php endif ?>
     <hr>
 
     <?php if(!isset($_SESSION['username'])): ?>
@@ -25,7 +25,7 @@
         <a href="forgot_password2.php">Forgot password?</a></p>
     <?php else: ?>
     <?php include_once 'upload_profile.php';?>
-    <p><?php if(isset($_SESSION['username'])) echo "<h3><b>".$_SESSION['username']."</b></h3>"?><br><a href="reset.php">User settings</a>
+    <p><?php if(isset($_SESSION['username'])) echo "<h1><b>".$_SESSION['username']."</b></h1>"?><br><a href="reset.php">User settings</a>
     <br><a href="logout.php">Log out</a>
     </p>
     <?php endif ?>

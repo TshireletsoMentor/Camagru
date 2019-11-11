@@ -4,13 +4,13 @@
     include_once 'config/util.php';
     
     $id = $_SESSION['id'];
-    if(isset($_POST['upload'])){
-        $file = $_FILES['file'];
-        $fileName = $_FILES['file']['name'];
-        $fileTmpName= $_FILES['file']['tmp_name'];
-        $fileSize = $_FILES['file']['size'];
-        $fileError = $_FILES['file']['error'];
-        $fileType = $_FILES['file']['type'];
+    if(isset($_POST['upload_pro'])){
+        $file = $_FILES['filepro'];
+        $fileName = $_FILES['filepro']['name'];
+        $fileTmpName= $_FILES['filepro']['tmp_name'];
+        $fileSize = $_FILES['filepro']['size'];
+        $fileError = $_FILES['filepro']['error'];
+        $fileType = $_FILES['filepro']['type'];
 
         $fileExt = explode('.', $fileName);
         $fileActualExt = strtolower(end($fileExt));
@@ -95,8 +95,8 @@
 <body>
     <form action="" method="POST" enctype="multipart/form-data">
         <table>
-        <tr><td><input type="file" name="file"></td><td><button type="submit" name="remove_img">Remove</button></td></tr>
-        <tr><td><button type="submit" name="upload">Upload image</button></td><td></td></tr>
+        <tr><td><input type="file" name="filepro"></td><td><button type="submit" name="remove_img">Remove</button></td></tr>
+        <tr><td><button type="submit" name="upload_pro">Upload image</button></td><td></td></tr>
         </table>
     </form>   
 </body>

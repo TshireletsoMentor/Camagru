@@ -3,10 +3,13 @@
     include_once 'session.php';
     include_once 'config/util.php';
     
-    if(isset($_SESSION['id'])){
+    if(!isset($_SESSION['id'])){
+        redirecto("index");
+    }
+    else{
         $id = $_SESSION['id'];
     }
-    if(isset($_POST['upload_img']) && isset($id)){
+    if(isset($_POST['upload_img_gal']) && isset($id)){
         $file = $_FILES['file'];
         $fileName = $_FILES['file']['name'];
         $fileTmpName= $_FILES['file']['tmp_name'];
@@ -58,7 +61,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Gallery</title>
+    <title>Private gallery</title>
     <style>
         body{
             margin: 0;
@@ -89,22 +92,21 @@
     <form action="" method="POST" enctype="multipart/form-data">
         <input type="text" name="filetitle" placeholder="Image title...">
         <input type="file" name="file">
-        <button type="submit" name="upload_img">Upload</button>
+        <button type="submit" name="upload_img_gal">Upload</button>
     </form>
     <br>
-    <a href="private_gallery.php">Private gallery</a>
-    <?php } ?>
     <hr style="border: dotted 2px;" />
     <header>
-        
     <?php 
-        $query = "SELECT name FROM gallery ORDER BY id DESC";
+        $query = "SELECT name FROM `gallery` WHERE 'userid' = ':id' ORDER BY id DESC";
         $stmt = $DB_NAME->prepare($query);
-        $stmt->execute();
-        while($row = $stmt->fetch()){?>
-            <?php
+        $stmt->execute(array(':id' => $id));
+        $row = $stmt->fetch();
+        var_dump($row);
+        while($row = $stmt->fetch()){
                 echo '<a href="#"><div><img src="'.$row['name'].'"></div></a>';
         }
+    }
     ?>
     </header>
     </body>
