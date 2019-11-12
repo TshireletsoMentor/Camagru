@@ -61,14 +61,14 @@
     <title>Gallery</title>
     <style>
         body{
-            margin: 0;
+            margin: -1;
         }
         header{
             margin: .5vw;
-            font-size: 0;
+            font-size: 10;
+            width:100%;
         }
         header div{
-            flex: auto;
             display:inline;
             margin: 10px;
 
@@ -98,12 +98,13 @@
     <header>
         
     <?php 
-        $query = "SELECT name FROM gallery ORDER BY id DESC";
+        $query = "SELECT * FROM gallery ORDER BY id DESC";
         $stmt = $DB_NAME->prepare($query);
         $stmt->execute();
-        while($row = $stmt->fetch()){?>
-            <?php
-                echo '<a href="#"><div><img src="'.$row['name'].'"></div></a>';
+        while($row = $stmt->fetch()){
+                echo "<div onclick=location.href='image.php?id=".$row['id']."'>";
+                    echo "<img src='".$row['name']."'>";
+                echo "</div>";
         }
     ?>
     </header>

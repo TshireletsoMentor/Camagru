@@ -54,12 +54,59 @@ try{
         `id` INT AUTO_INCREMENT PRIMARY KEY,
         `userid` INT(11) NOT NULL,
         `title` VARCHAR(255) NOT NULL,
-        `name`  VARCHAR(255) NOT NULL
+        `name`  VARCHAR(255) NOT NULL,
+        `date` TIMESTAMP
         )";
         $conn->exec($query);
         echo "<p style='padding: 20px; color:green;'> Table: gallery, created\n</p>";
 }
 catch (PDOException $err) {
     echo "<p style='padding:20px; color:red;'> Table: gallery not created\n".$err->getMessage()."</p>";
+}
+
+try{
+    $conn = new PDO($DB_SERVER_DB, $DB_USER, $DB_PASSWORD);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $query = "CREATE TABLE `likes` (
+        `id` INT AUTO_INCREMENT PRIMARY KEY,
+        `userid` INT(11) NOT NULL,
+        `imageid` INT(11) NOT NULL
+        )";
+    $conn->exec($query);
+    echo "<p style='padding: 20px; color:green;'> Table: likes, created\n</p>";
+}
+catch (PDOException $err) {
+    echo "<p style='padding:20px; color:red;'> Table: likes not created\n".$err->getMessage()."</p>";
+}
+
+try{
+    $conn = new PDO($DB_SERVER_DB, $DB_USER, $DB_PASSWORD);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $query = "CREATE TABLE `dislikes` (
+        `id` INT AUTO_INCREMENT PRIMARY KEY,
+        `userid` INT(11) NOT NULL,
+        `imageid` INT(11) NOT NULL
+        )";
+    $conn->exec($query);
+    echo "<p style='padding: 20px; color:green;'> Table: dislikes, created\n</p>";
+}
+catch (PDOException $err) {
+    echo "<p style='padding:20px; color:red;'> Table: dislikes not created\n".$err->getMessage()."</p>";
+}
+
+try{
+    $conn = new PDO($DB_SERVER_DB, $DB_USER, $DB_PASSWORD);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $query = "CREATE TABLE `comments` (
+        `id` INT AUTO_INCREMENT PRIMARY KEY,
+        `userid` INT(11) NOT NULL,
+        `imageid` INT(11) NOT NULL,
+        `comment` LONGTEXT NOT NULL
+        )";
+    $conn->exec($query);
+    echo "<p style='padding: 20px; color:green;'> Table: comments, created\n</p>";
+}
+catch (PDOException $err) {
+    echo "<p style='padding:20px; color:red;'> Table: comments not created\n".$err->getMessage()."</p>";
 }
 ?>
