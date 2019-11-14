@@ -101,7 +101,8 @@ try{
         `id` INT AUTO_INCREMENT PRIMARY KEY,
         `userid` INT(11) NOT NULL,
         `imageid` INT(11) NOT NULL,
-        `comment` LONGTEXT NOT NULL
+        `comment` LONGTEXT NOT NULL,
+        `date` TIMESTAMP
         )";
     $conn->exec($query);
     echo "<p style='padding: 20px; color:green;'> Table: comments, created\n</p>";

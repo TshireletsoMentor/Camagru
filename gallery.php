@@ -102,9 +102,11 @@
         $stmt = $DB_NAME->prepare($query);
         $stmt->execute();
         while($row = $stmt->fetch()){
-                echo "<div onclick=location.href='image.php?id=".$row['id']."'>";
-                    echo "<img src='".$row['name']."'>";
-                echo "</div>";
+                echo "<div>
+                        <a href='image.php?id=".$row['id']."'>
+                            <img src='".$row['name']."'>
+                        </a>
+                    </div>";
         }
     ?>
     </header>

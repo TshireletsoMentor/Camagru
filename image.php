@@ -1,36 +1,39 @@
 <?php
     include_once 'config/connect.php';
     include_once 'session.php';
+    include_once 'config/util.php';
 
-    $imageid = htmlentities($_GET['id']);
-    try{
-        $query = "SELECT * FROM `gallery` WHERE id = :imageid";
+
+    function setComment($DB_NAME, $imageid, $userid){
+        if(isset($_POST['CommentSubmit'])){
+            $comment = htmlentities($_POST['comment']);
+            try{
+                $query = "INSERT INTO comments (userid, imageid, comment, date) VALUES
+                            (:userid, :imageid, :comment, now())";
+                $stmt = $DB_NAME->prepare($query);
+                $stmt->execute(array(':userid' => $userid, ':imageid' => $imageid, ':comment' => $comment));
+                echo flashMessage("Comment added", "Pass");
+            }
+            catch(PDOExpection $err){
+                echo "Comment not added".$err->getMessage();
+            }
+        }
+        
+    }
+    function getComment($DB_NAME, $imageid){
+        $query = "SELECT users.username, comments.comment, comments.date FROM comments, users
+                    WHERE users.id = comments.userid AND imageid = :imageid ORDER BY comments.id DESC";
         $stmt = $DB_NAME->prepare($query);
         $stmt->execute(array(':imageid' => $imageid));
-        if($stmt->rowCount() == 1){
-            $row = $stmt->fetch();
-            $image = $row['name'];
-            $title = $row['title'];
-            echo "<div class='container'><img src='".$image."'>
-            <h3><i>$title</i></h3></div>";
-            
+        
+        while($row = $stmt->fetch()){
+            echo "<div class='comment-box'><p>";
+                echo "<b>".$row['username']."</b><br>";
+                echo "@".$row['date']."<br><br>";
+                echo "<div class='small_box'>",nl2br($row['comment']),"</div>";
+            echo "</p></div>";
         }
-        echo "<div class='comment'><p>Comments</p>
-        <table><tr><td>
-        <form method='' type='POST'>
-        <textarea style='margin-left:10px' cols='50' rows='5' placeholder='Enter text here...'></textarea>
-        <td></tr>
-        <tr><td>
-        <p><button style='float:right' type='submit' name='comment'>Comment</button></p>
-        <td></tr>
-        </form>
-        </div>";
-
     }
-    catch (PDOException $err){
-        echo "Error: ".$err->getMessage();
-    }
-
 
 ?>
 
@@ -43,31 +46,112 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Image</title>
     <style>
-        .container{
-            margin:auto;
-            width:600px;
-            Height:600px;
-            padding: 1px;
+ 		body {
+			background-color: #ddd;
+		}
+		textarea {
+			width: 80%;
+			height: 80px;
+			background-color: #fff;
+			resize: none;
+            display:block;
+            margin-left: auto;
+            margin-right: auto;
+		}
+        .small_box{
+            background-color:#ddd;
         }
-        .container img{
-            width:100%;
-            height:90%;
-            border: 2px solid black;
-        }
-        .comment{
-            margin:auto;
-            width:600px;
-            Height:100%;
-            padding: 1px;
-            border: 2px solid black;
+		button {
+			width: 100px;
+			height: 30px;
+			background-color: #282828;
+			border: none;
+			color: #fff;
+			font-family: arial;
+			font-weight: 400;
+			cursor: pointer;
+			margin-bottom: 60px;
+            display:block;
+            margin-left: auto;
+            margin-right: auto;
+		}
+
+		.comment-box {
+			width: 80%;
+			padding: 10px;
+			margin-bottom: 4px;
+			background-color: #fff;
+			border-radius: 4px;
+            display:block;
+            margin-left: auto;
+            margin-right: auto;
+
+		}
+
+		.comment-box p {
+			font-family: arial;
+			font-size: 14px;
+			line-height: 16px;
+			color: #282828;
+			font-weight: 100;
+		}
+
+		img	{
+			height: 50%;
+            width: 50%;
+            display:block;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom:5px;
+			
+		}
+        .like{
+            height: 50px;
+            width: 50px;
+            margin-right:100px;
+            display:inline;
         }
     </style>
 </head>
 <body>
     <?php 
         if(!isset($_SESSION['id'])){
-            redirecto("index");
+            $imageid = htmlentities($_GET['id']);
+            $query = "SELECT name FROM gallery WHERE id = :id";
+            $stmt = $DB_NAME->prepare($query);
+            $stmt->execute(array(':id' => $imageid));
+            $row = $stmt->fetch();
+            echo "  <div class='container'>
+                        <img src='".$row['name']."'>";
         }
+        else{
+            $userid = $_SESSION['id']; 
+            $username = $_SESSION['username'];   
+            $imageid = htmlentities($_GET['id']);
+
+            $query = "SELECT name FROM gallery WHERE id = :id";
+            $stmt = $DB_NAME->prepare($query);
+            $stmt->execute(array(':id' => $imageid));
+            $row = $stmt->fetch();
+
+            /*$query2 = "SELECT like FROM gallery WHERE id = :id";
+            $stmt2 = $DB_NAME->prepare($query2);
+            $stmt2->execute(array(':id' => $imageid));
+            $row2 = $stmt2->fetch();*/
+
+            echo "  <img src='".$row['name']."'>";
+            echo "<p>0";
+            echo '  <form action="" method="post" accept-charset="">
+                        <input class="like" type="image" src="uploads/like.png" name="like" alt="submit" value="0">
+                    </form></p>';
+            echo    '<form action="'.setComment($DB_NAME, $imageid, $userid).'" method="post">
+                        <input type="hidden" name="username" value="'.$username.'">
+                        <textarea name="comment" placeholder="Enter comment..."></textarea><br>
+                        <button type="submit" name="CommentSubmit">Comment</button>
+                    </form>';
+        }
+        getComment($DB_NAME, $imageid);
     ?>
+
 </body>
 </html>
