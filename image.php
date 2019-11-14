@@ -134,16 +134,17 @@
             $stmt->execute(array(':id' => $imageid));
             $row = $stmt->fetch();
 
-            /*$query2 = "SELECT like FROM gallery WHERE id = :id";
+            $query2 = "SELECT like, userid FROM gallery WHERE id = :id";
             $stmt2 = $DB_NAME->prepare($query2);
             $stmt2->execute(array(':id' => $imageid));
-            $row2 = $stmt2->fetch();*/
+            $like = 0;
+            while($row2 = $stmt2->fetch()){
+                if($row2['like'] == 'Y')
+                    $like++;
+            }
 
             echo "  <img src='".$row['name']."'>";
-            echo "<p>0";
-            echo '  <form action="" method="post" accept-charset="">
-                        <input class="like" type="image" src="uploads/like.png" name="like" alt="submit" value="0">
-                    </form></p>';
+            echo '  <a href="like.php?id='.$imageid.'">"'.$like.'"</a>';
             echo    '<form action="'.setComment($DB_NAME, $imageid, $userid).'" method="post">
                         <input type="hidden" name="username" value="'.$username.'">
                         <textarea name="comment" placeholder="Enter comment..."></textarea><br>
