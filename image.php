@@ -13,10 +13,53 @@
                 $stmt = $DB_NAME->prepare($query);
                 $stmt->execute(array(':userid' => $userid, ':imageid' => $imageid, ':comment' => $comment));
                 echo flashMessage("Comment added", "Pass");
+
+                $query1 = "SELECT userid, title FROM gallery WHERE id = :imageid";
+                $stmt1 = $DB_NAME->prepare($query1);
+                $stmt1->execute(array(':imageid' => $imageid));
+                $row1 = $stmt1->fetch();
+                $img_owner = $row1['userid'];
+                $img_title = $row1['title'];
+                $img_comment = $comment;
+
+                $query2 = "SELECT username, preference, email FROM users WHERE id = :userid";
+                $stmt2 = $DB_NAME->prepare($query2);
+                $stmt2->execute(array(':userid' => $img_owner));
+                $row2 = $stmt2->fetch();
+                $img_owner_username = $row2['username'];
+                $pref = $row2['preference'];
+                $email = $row2['email'];
+                $commenter = $_SESSION['username'];
+
+                if($pref == 'ON'){
+                    $url = $_SERVER['HTTP_HOST'].str_replace("image.php", "image.php", $_SERVER['REQUEST_URI']);
+                    $subject = "<i>[Camagru]</i> - Notification";
+
+                            $header = 'MIME-Version: 1.0'."\r\n";
+                            $header .= 'Content-type: text/html; charset=UTF-8'."\r\n";
+                            $header .= 'From: Camagru@DoNotReply.co.za'."\r\n";
+                    
+                            $message = '
+                            <html>
+                                <head>
+                                    <title>'.$subject.'</title>
+                                </head>
+                                <body>
+                                    Hey <b>'.$img_owner_username.'</b>.<br>
+                                    '.$commenter.' commented your image: "'.$img_title.'".<br>
+                                    comment:<br>
+                                        "'.$img_comment.'"<br>
+                                    Click the link to view all comments: <a href="http://'.$url.'">Gallery</a>.<br>
+                                    If this email does not concern you, please ignore this email.
+                                </body>
+                            ';
+                            mail($email, $subject, $message, $header);
+                }
             }
             catch(PDOExpection $err){
                 echo "Comment not added".$err->getMessage();
             }
+        
         }
         
     }
@@ -106,10 +149,7 @@
 			
 		}
         .like{
-            height: 50px;
-            width: 50px;
-            margin-right:100px;
-            display:inline;
+            text-align: center;
         }
     </style>
 </head>
@@ -121,8 +161,18 @@
             $stmt = $DB_NAME->prepare($query);
             $stmt->execute(array(':id' => $imageid));
             $row = $stmt->fetch();
-            echo "  <div class='container'>
-                        <img src='".$row['name']."'>";
+
+            $query2 = "SELECT `like` FROM likes WHERE imageid = :imageid";
+            $stmt2 = $DB_NAME->prepare($query2);
+            $stmt2->execute(array(':imageid' => $imageid));
+            $like = 0;
+            while($row2 = $stmt2->fetch()){
+                if($row2['like'] == 'Y')
+                    $like++;
+            }
+            echo "<a href='index.php'>Home</a>";
+            echo "<img src='".$row['name']."'>";
+            echo '<div class="like">'.$like.'&#x1f44d</div>';
         }
         else{
             $userid = $_SESSION['id']; 
@@ -134,17 +184,19 @@
             $stmt->execute(array(':id' => $imageid));
             $row = $stmt->fetch();
 
-            $query2 = "SELECT like, userid FROM gallery WHERE id = :id";
+            $query2 = "SELECT `like` FROM likes WHERE imageid = :imageid";
             $stmt2 = $DB_NAME->prepare($query2);
-            $stmt2->execute(array(':id' => $imageid));
+            $stmt2->execute(array(':imageid' => $imageid));
             $like = 0;
             while($row2 = $stmt2->fetch()){
                 if($row2['like'] == 'Y')
                     $like++;
             }
 
+            echo "<a href='index.php'>Home</a>";
+            echo "<a href='logout.php'>log out</a>";
             echo "  <img src='".$row['name']."'>";
-            echo '  <a href="like.php?id='.$imageid.'">"'.$like.'"</a>';
+            echo '  <div class="like"><a href="like.php?id='.$imageid.'">'.$like.'&#x1f44d</a></div>';
             echo    '<form action="'.setComment($DB_NAME, $imageid, $userid).'" method="post">
                         <input type="hidden" name="username" value="'.$username.'">
                         <textarea name="comment" placeholder="Enter comment..."></textarea><br>
