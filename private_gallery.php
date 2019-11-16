@@ -62,6 +62,7 @@
            margin: 50;
        }
        header{
+           text-align: center;
            margin: .5vw;
            font-size: 50;
        }
@@ -76,13 +77,71 @@
            border: solid 2px black;
            margin: 2px;
        }
+       ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+        }
+        li {
+            float: left;
+        }
+        li a, .dropbtn {
+            display: inline-block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        li a:hover, .dropdown:hover .dropbtn {
+            background-color: grey;
+        }
+        li.dropdown {
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+        }
+        .dropdown-content a:hover {background-color: #f1f1f1;}
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
     </style>
 </head>
 <body>
+    <b><i><font size="30">Camagru</font></i></b><hr>
     <section>
-    <div>
-    <h3>Gallery</h3><br>
-    <header>
+        <ul>
+        <li><a href="index.php">Home</a></li>
+        <li class="dropdown">
+            <?php if(isset($_SESSION['username'])){?>
+            <a href="javascript:void(0)" class="dropbtn">Menu</a>
+            <div class="dropdown-content">
+            <a href="reset.php">Profile settings</a>
+            <a href="private_gallery.php">Private Gallery</a>
+            <a href="#">Camera</a>
+            <a href="logout.php">Log out</a><?php }?>
+            </div>
+        </li>
+    </ul>
+    <h3>Private Gallery</h3><br>
+    
+
+
     <?php
     if(!isset($_SESSION['id'])){
         redirecto("index");
@@ -96,11 +155,11 @@
     </form>
     <?php if(isset($result)){echo $result;} ?>
     <br>
-    <a href="index.php">back</a>
     <hr style="border: dotted 2px;" />
-    <div class='row'>
-    <?php 
-        $query = "SELECT name, id FROM `gallery` WHERE userid = :userid ORDER BY id DESC";
+    <header>
+    <?php
+
+        $query = "SELECT `name`, id FROM `gallery` WHERE userid = :userid ORDER BY id DESC";
         $stmt = $DB_NAME->prepare($query);
         $stmt->execute(array(':userid' => $id));
         $row = $stmt->fetch();
@@ -110,7 +169,6 @@
                 echo "</div>";
         }
     ?>
-    </div>
     </header>
     </section>
     </body>

@@ -64,14 +64,31 @@
         
     }
     function getComment($DB_NAME, $imageid){
-        $query = "SELECT users.username, comments.comment, comments.date FROM comments, users
+        $query = "SELECT users.username, users.id, comments.comment, comments.date FROM comments, users
                     WHERE users.id = comments.userid AND imageid = :imageid ORDER BY comments.id DESC";
         $stmt = $DB_NAME->prepare($query);
         $stmt->execute(array(':imageid' => $imageid));
-        
+
         while($row = $stmt->fetch()){
-            echo "<div class='comment-box'><p>";
-                echo "<b>".$row['username']."</b><br>";
+                echo "<div class='comment-box'><p>";
+
+                $query1 = "SELECT `status` FROM pro_img WHERE userid = :userid";
+                $stmt1 = $DB_NAME->prepare($query1);
+                $stmt1->execute(array(':userid' => $row['id']));
+                $row1 = $stmt1->fetch();
+
+                if($row1['status'] == 1){
+                    $filename = "uploads/profile".$row['id']."*";
+                    $fileinfo = glob($filename);
+                    $fileext = explode(".", $fileinfo[0]);
+                    $fileactualext = $fileext[1];
+                    $file_display = "uploads/profile".$row['id'].".".$fileactualext;
+                }
+                else{
+                    $file_display = "uploads/default.jpg";
+                }
+
+                echo "<img style='float:left;width:50px;height:50px;border-radius: 50%;border: solid 2px black' src='$file_display'><b>".$row['username']."</b><br>";
                 echo "@".$row['date']."<br><br>";
                 echo "<div class='small_box'>",nl2br($row['comment']),"</div>";
             echo "</p></div>";
@@ -140,8 +157,8 @@
 		}
 
 		img	{
-			height: 50%;
-            width: 50%;
+			height: 40%;
+            width: 40%;
             display:block;
             margin-left: auto;
             margin-right: auto;
@@ -151,9 +168,65 @@
         .like{
             text-align: center;
         }
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+        }
+        li {
+            float: left;
+        }
+        li a, .dropbtn {
+            display: inline-block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        li a:hover, .dropdown:hover .dropbtn {
+            background-color: grey;
+        }
+        li.dropdown {
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+        }
+        .dropdown-content a:hover {background-color: #f1f1f1;}
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
     </style>
 </head>
 <body>
+    <ul>
+        <li><a href="index.php">Home</a></li>
+        <li class="dropdown">
+            <?php if(isset($_SESSION['username'])){?>
+            <a href="javascript:void(0)" class="dropbtn">Menu</a>
+            <div class="dropdown-content">
+            <a href="reset.php">Profile settings</a>
+            <a href="private_gallery.php">Private Gallery</a>
+            <a href="#">Camera</a>
+            <a href="logout.php">Log out</a><?php }?>
+            </div>
+        </li>
+    </ul>   
     <?php 
         if(!isset($_SESSION['id'])){
             $imageid = htmlentities($_GET['id']);
@@ -170,7 +243,6 @@
                 if($row2['like'] == 'Y')
                     $like++;
             }
-            echo "<a href='index.php'>Home</a>";
             echo "<img src='".$row['name']."'>";
             echo '<div class="like">'.$like.'&#x1f44d</div>';
         }
@@ -179,7 +251,7 @@
             $username = $_SESSION['username'];   
             $imageid = htmlentities($_GET['id']);
 
-            $query = "SELECT name FROM gallery WHERE id = :id";
+            $query = "SELECT name, userid FROM gallery WHERE id = :id";
             $stmt = $DB_NAME->prepare($query);
             $stmt->execute(array(':id' => $imageid));
             $row = $stmt->fetch();
@@ -192,16 +264,17 @@
                 if($row2['like'] == 'Y')
                     $like++;
             }
-
-            echo "<a href='index.php'>Home</a>";
-            echo "<a href='logout.php'>log out</a>";
-            echo "  <img src='".$row['name']."'>";
-            echo '  <div class="like"><a href="like.php?id='.$imageid.'">'.$like.'&#x1f44d</a></div>';
+            if(!empty($row['name'])){
+            echo "  <div class='like'><img src='".$row['name']."'>";}
+            else{redirecto('index');}
+            if($row['userid'] == $_SESSION['id']){
+            echo '  <a href="delete.php?id='.$imageid.'">DELETE</a><br><br>';}
+            echo '  <a href="like.php?id='.$imageid.'">'.$like.'&#x1f44d</a>';
             echo    '<form action="'.setComment($DB_NAME, $imageid, $userid).'" method="post">
                         <input type="hidden" name="username" value="'.$username.'">
                         <textarea name="comment" placeholder="Enter comment..."></textarea><br>
                         <button type="submit" name="CommentSubmit">Comment</button>
-                    </form>';
+                    </form></div>';
         }
         getComment($DB_NAME, $imageid);
     ?>

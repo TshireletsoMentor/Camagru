@@ -61,15 +61,17 @@
     <title>Gallery</title>
     <style>
         body{
-            margin: -1;
+            margin: 50;
         }
         header{
             margin: .5vw;
-            font-size: 10;
-            width:100%;
+            font-size: 50;
+            text-align:center;
         }
         header div{
-            display:inline;
+            align-content: center;
+            flex: auto;
+            display:inline-block;
             margin: 10px;
 
         }

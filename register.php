@@ -74,9 +74,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Register</title>
+    <style>
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+        }
+        li {
+            float: left;
+        }
+        li a, .dropbtn {
+            display: inline-block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            font-size:18px;
+            text-decoration: none;
+        }
+        li a:hover, .dropdown:hover .dropbtn {
+            background-color: grey;
+        }
+        li.dropdown {
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+        }
+        .dropdown-content a:hover {background-color: #f1f1f1;}
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+    </style>
 </head>
 <body>
     <h1><i>Camagru</i><hr>
+    <ul>
+        <li><a href="index.php">Home</a></li>
+    </ul>
     <h3>Registration form</h3>
 
     <?PHP if(isset($result)) echo $result; ?>
@@ -95,6 +144,5 @@
             <tr><td></td><td><input style="float: right;" type="submit" name="signupBtn" value="Sign up"></td></tr>
         </table>
     </form>
-    <p><a href="index.php">Back</a></p>
 </body>
 </html>

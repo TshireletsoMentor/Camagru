@@ -41,8 +41,9 @@ if(!empty($_GET['token'])){
     <title>Verify</title>
 </head>
 <body>
-    <?php if(isset($result)) echo $result; ?>
+    <?php if(isset($result)) echo $result; 
+    header("Refresh:3; url=index.php");
+    ?>
     
-    <a href="index.php">back</a>
 </body>
 </html>
