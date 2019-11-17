@@ -213,10 +213,25 @@
         }
         a {
             text-decoration: none;
+            color:grey;
+        }
+        .a:link{
+            color:white;
+        }.a:visited{
+            color:grey;
+        }
+        .delete{
+            width: 60px;
+            margin: auto;
+            padding: 10px 20px;
+            background-color: black;
+            color: white;
+            text-decoration: none;
         }
     </style>
 </head>
 <body>
+<h1><i>Camagru</i></h1><hr>
     <ul>
         <li><a href="index.php">Home</a></li>
         <li class="dropdown">
@@ -225,15 +240,15 @@
             <div class="dropdown-content">
             <a href="reset.php">Profile settings</a>
             <a href="private_gallery.php">My Gallery</a>
-            <a href="#">Camera</a>
+            <a href="camera.php">Photo Booth</a>
             <a href="logout.php">Log out</a><?php }?>
             </div>
         </li>
-    </ul>   
+    </ul> <br>  
     <?php 
         if(!isset($_SESSION['id'])){
             $imageid = htmlentities($_GET['id']);
-            $query = "SELECT name FROM gallery WHERE id = :id";
+            $query = "SELECT name, title FROM gallery WHERE id = :id";
             $stmt = $DB_NAME->prepare($query);
             $stmt->execute(array(':id' => $imageid));
             $row = $stmt->fetch();
@@ -246,15 +261,15 @@
                 if($row2['like'] == 'Y')
                     $like++;
             }
-            echo "<img src='".$row['name']."'>";
-            echo '<div class="like">'.$like.'&#x1f44d</div>';
+            echo "<img src='".$row['name']."'><br>";
+            echo '<div class="like">'.$row['title'].'<br><br>'.$like.'&#x1f44d</div>';
         }
         else{
             $userid = $_SESSION['id']; 
             $username = $_SESSION['username'];   
             $imageid = htmlentities($_GET['id']);
 
-            $query = "SELECT name, userid FROM gallery WHERE id = :id";
+            $query = "SELECT name, userid, title FROM gallery WHERE id = :id";
             $stmt = $DB_NAME->prepare($query);
             $stmt->execute(array(':id' => $imageid));
             $row = $stmt->fetch();
@@ -268,10 +283,11 @@
                     $like++;
             }
             if(!empty($row['name'])){
-            echo "  <div class='like'><img src='".$row['name']."'>";}
+            echo "  <div class='like'><img src='".$row['name']."'><br>";
+            echo $row['title'];}
             else{redirecto('index');}
             if($row['userid'] == $_SESSION['id']){
-            echo '  <a href="delete.php?id='.$imageid.'">DELETE</a><br><br>';}
+            echo '  <br><br><div class="delete"><a href="delete.php?id='.$imageid.'">DELETE</a></div><br><br>';}
             echo '  <a href="like.php?id='.$imageid.'">'.$like.'&#x1f44d</a>';
             echo    '<form action="'.setComment($DB_NAME, $imageid, $userid).'" method="post">
                         <input type="hidden" name="username" value="'.$username.'">

@@ -5,47 +5,49 @@
     
     $id = $_SESSION['id'];
     if(isset($_POST['upload_img2']) && isset($id)){
-        $file = $_FILES['file'];
-        $fileName = $_FILES['file']['name'];
-        $fileTmpName= $_FILES['file']['tmp_name'];
-        $fileSize = $_FILES['file']['size'];
-        $fileError = $_FILES['file']['error'];
-        $fileType = $_FILES['file']['type'];
+        $success = array();
+        for($x=0; $x < count($_FILES['file']['name']); $x++){
+            $file = $_FILES['file']['name'][$x];
+            $fileName = $_FILES['file']['name'][$x];
+            $fileTmpName= $_FILES['file']['tmp_name'][$x];
+            $fileSize = $_FILES['file']['size'][$x];
+            $fileError = $_FILES['file']['error'][$x];
+            $fileType = $_FILES['file']['type'][$x];
 
-        $fileExt = explode('.', $fileName);
-        $fileActualExt = strtolower(end($fileExt));
+            $fileExt = explode('.', $fileName);
+            $fileActualExt = strtolower(end($fileExt));
 
-        $allowed = array('jpg', 'jpeg', 'png', 'gif');
-        if(in_array($fileActualExt, $allowed)){
-            if($fileError === 0){
-                if($fileSize < 50000000){
-                    $fileNameNew = uniqid('', true).".".$fileActualExt;
-                    $fileDestination = 'uploads/'.$fileNameNew;
-                    move_uploaded_file($fileTmpName, $fileDestination);
-                    
-                    if(!empty($_POST['filetitle'])){
-                        $filetitle = htmlentities($_POST['filetitle']);
+            $allowed = array('jpg', 'jpeg', 'png', 'gif');
+            if(in_array($fileActualExt, $allowed)){
+                if($fileError === 0){
+                    if($fileSize < 50000000){
+                        $fileNameNew = uniqid('', true).".".$fileActualExt;
+                        $fileDestination = 'uploads/'.$fileNameNew;
+                        move_uploaded_file($fileTmpName, $fileDestination);
+                        
+                        if(!empty($_POST['filetitle'])){
+                            $filetitle = htmlentities($_POST['filetitle']);
+                        }
+                        else{
+                            $filetitle = "Are words needed?";
+                        }
+                        $query = "INSERT INTO `gallery`(userid, title, name)
+                                VALUES(:userid, :title, :name)";
+                        $stmt = $DB_NAME->prepare($query);
+                        $stmt->execute(array(':userid' => $id, ':title' => $filetitle, ':name' => $fileDestination));
+                        $success [] = "Uplad successfull";                    
+
                     }
-                    else{
-                        $filetitle = "Are words needed?";
-                    }
-                    $query = "INSERT INTO `gallery`(userid, title, name)
-                            VALUES(:userid, :title, :name)";
-                    $stmt = $DB_NAME->prepare($query);
-                    $stmt->execute(array(':userid' => $id, ':title' => $filetitle, ':name' => $fileDestination));
-                    $result = flashMessage("Upload successful", "Pass");                    
-
+                    else
+                    $result = flashMessage("Uploaded file is too large, maximum file size: 50 mb.");
                 }
                 else
-                $result = flashMessage("Uploaded file is too large, maximum file size: 50 mb.");
+                $result =  flashMessage("Error uploading file, please try again.");
             }
-            else
-            $result =  flashMessage("Error uploading file, please try again.");
+            else{
+                $result =  flashMessage("Only image files are allowed, these include: 'jpg', 'jpeg', 'png' and 'gif'.");
+            }
         }
-        else{
-            $result =  flashMessage("Only image files are allowed, these include: 'jpg', 'jpeg', 'png' and 'gif'.");
-        }
-       
     }
 
 
@@ -59,8 +61,15 @@
     <title>Private gallery</title>
     <style>
        body{
-           margin: 50;
-       }
+            position: relative;
+            min-height: 100%;
+            min-height: 100vh;
+            padding-bottom:10px;
+        }
+        footer {
+            position: absolute;
+            right: 0;bottom:0;
+        }
        header{
            text-align: center;
            margin: .5vw;
@@ -131,6 +140,22 @@
         a {
             text-decoration: none;
         }
+        input[type=text] {
+            outline: none;
+            border: 1px solid #555;
+            color: white;
+        }
+        
+        input[type=file] {
+            outline: none;
+            border: 1px solid #555;
+        }
+        button[type=submit] {
+            outline: none;
+            border: 1px solid #555;
+            background:black;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -144,6 +169,7 @@
                 </button>
                 <div class="dropdown-content">
                   <a href="private_gallery.php">My Gallery</a>
+                  <a href="camera.php">Photo Booth</a>
                   <a href="reset.php">Update Profile</a>
                   <a href="logout.php">Logout</a>
                 </div>
@@ -160,10 +186,18 @@
     }?>
      <form action="" method="POST" enctype="multipart/form-data">
         <input type="text" name="filetitle" placeholder="Image title...">
-        <input type="file" name="file">
+        <input type="file" name="file[]" multiple>
         <button type="submit" name="upload_img2">Upload</button>
     </form>
-    <?php if(isset($result)){echo $result;} ?>
+    <?php if(isset($result)){echo $result;}
+        if(isset($success)){
+            if(count($success) < 2){
+                echo flashMessage("Upload successful", "Pass");
+            }
+            else{
+                echo flashMessage("Uploads successful", "Pass");
+        }
+    }?>
     <br>
     <hr style="border: dotted 2px;" />
     <header>
@@ -208,4 +242,5 @@
     ?>
     </header>
     </body>
+    <footer> &copy; Copyright tmentor <?php print date("Y")?></footer>
 </html>

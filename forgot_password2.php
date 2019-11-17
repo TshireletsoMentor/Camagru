@@ -48,9 +48,106 @@ if(isset($_POST['forgotBtn'])){
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Forgotpassword</title>
+    <style>
+            body {
+        position: relative;
+        min-height: 100%;
+        min-height: 100vh;
+        }
+        footer {
+        position: absolute;
+        right: 0;bottom:0;
+        }
+        input{
+            border: 1px solid #555;
+        }
+        input[type=submit] {
+            outline: none;
+            background-color: black;
+            color: white;
+        }
+        input[type=text]:focus {
+            outline: none;
+            border: 3px solid #555;
+        }
+        input[type=email]:focus {
+            outline: none;
+            border: 3px solid #555;
+        }
+        input[type=password]:focus {
+            outline: none;
+            border: 3px solid #555;
+        }
+       .navbar {
+        overflow: hidden;
+        background-color: #333;
+        }
+        .navbar a {
+        float: left;
+        font-size: 16px;
+        color: white;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        }
+        .dropdown {
+        float: left;
+        overflow: hidden;
+        }
+        .dropdown .dropbtn {
+        font-size: 16px;  
+        border: none;
+        outline: none;
+        color: white;
+        padding: 14px 16px;
+        background-color: inherit;
+        font-family: inherit;
+        margin: 0;
+        }
+        .navbar a:hover, .dropdown:hover .dropbtn {
+        background-color: grey;
+        }
+        .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+        }
+        .dropdown-content a {
+        float: none;
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        text-align: left;
+        }
+        .dropdown-content a:hover {
+        background-color: #ddd;
+        }
+        .dropdown:hover .dropdown-content {
+        display: block;
+        }
+    </style>
 </head>
 <body>
-    <h2> User Authentication system </h2><hr>
+    <h1><i>Camagru</i><hr>
+    <div class="navbar">
+        <a href="index.php">Home</a>
+            <div class="dropdown">
+                <?php if (isset($_SESSION['id'])): ?>
+                <button class="dropbtn">Menu 
+                  <i class="fa fa-caret-down"></i>
+                </button>
+                <div class="dropdown-content">
+                <a href="private_gallery.php">My Gallery</a>
+                  <a href="reset.php">Update Profile</a>
+                  <a href="logout.php">Logout</a>
+                </div>
+                <?php endif ?>
+            </div> 
+    </div>
     <h3>Forgot password</h3>
 
     <?PHP if(isset($result)) echo $result; ?>
@@ -62,6 +159,6 @@ if(isset($_POST['forgotBtn'])){
             <tr><td></td><td><input style="float: right;" type="submit" name="forgotBtn" value="submit"></td></tr>
         </table>
     </form>
-    <p><a href="index.php">Back</a></p>
 </body>
+<footer> &copy; Copyright tmentor <?php print date("Y")?></footer>
 </html>

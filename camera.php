@@ -1,7 +1,6 @@
 <?php
     include_once "session.php";
-    include_once "config/connect.php";
-    include_once "config/util.php";
+
 ?>
 
 <!DOCTYPE html>
@@ -10,9 +9,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>index</title>
+    <title>Booth</title>
     <style>
-        body{
+                body{
             position: relative;
             min-height: 100%;
             min-height: 100vh;
@@ -73,14 +72,27 @@
         .dropdown:hover .dropdown-content {
         display: block;
         }
+        .booth{
+            width: 400px;
+            background: #ccc;
+            border: 10px solid #ddd;
+            margin: auto;
+        }
+        .booth-capture-button{
+            display: block;
+            margin: 10px 0;
+            padding: 10px 20px;
+            background-color: black;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+        }
+        #canvas{
+            display:none;
+        }
     </style>
 </head>
 <body>
-    <b><i><font size="30">Camagru</font></i></b>
-    <?php if(!isset($_SESSION['username'])):?>
-    <img style='width:100px;height:100px;border-radius: 50%;border: solid 2px black' src='uploads/default.gif'></p>
-    <?php endif ?>
-    <hr>
     <div class="navbar">
         <a href="index.php">Home</a>
             <div class="dropdown">
@@ -97,19 +109,13 @@
                 <?php endif ?>
             </div> 
     </div>
-    <?php if(!isset($_SESSION['username'])): ?>
-    <p>You are currently not signed in. <hr>
-        <?php include_once 'login.php'; ?><br>
-        <a href="forgot_password2.php">Forgot password?</a></p>
-    <?php else: ?><br>
-    <?php include_once 'upload_profile.php';?>
-    <p><?php if(isset($_SESSION['username'])) echo "<h1><b>".$_SESSION['username']."</b></h1>"?><br>
-    <!-- <a href="reset.php">User settings</a>
-    <br><a href="logout.php">Log out</a>-->
-    </p>
-    <?php endif ?>
-    <hr>
-    <?php include_once 'gallery.php'; ?>
+    <div class="booth">
+        <video id="video" width="400" height="300" autoplay></video>
+        <canvas id="canvas" width="400" height="300"></canvas>
+        <a href="#" id="capture" class="booth-capture-button">Take photo</a>
+        <img id="image" style="width:100%;height:400px;"src="uploads/default.gif" alt="">
+        <script  src="video.js"></script>
+    </div>
 </body>
 <footer> &copy; Copyright tmentor <?php print date("Y")?></footer>
 </html>

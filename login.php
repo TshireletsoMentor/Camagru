@@ -44,6 +44,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Login</title>
+    <style>
+        input{
+            border: 1px solid #555;
+        }
+        input[type=submit] {
+            outline: none;
+            background-color: black;
+            color: white;
+        }
+        input[type=text]:focus {
+            outline: none;
+            border: 3px solid #555;
+        }
+        input[type=password]:focus {
+            outline: none;
+            border: 3px solid #555;
+        }
+    </style>
 </head>
 <body>
     <h3>Login form</h3>

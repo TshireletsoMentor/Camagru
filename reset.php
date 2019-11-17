@@ -122,6 +122,38 @@ else{
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Password Reset Page</title>
     <style>
+        body {
+        position: relative;
+        min-height: 100%;
+        min-height: 100vh;
+        }
+        footer {
+        position: absolute;
+        right: 0;bottom:0;
+        }
+        input{
+            border: 1px solid #555;
+        }
+        input[type=submit] {
+            outline: none;
+            background-color: black;
+            color: white;
+        }
+        input[type=radio] {
+            border: 1px solid #555;
+        }
+        input[type=text]:focus {
+            outline: none;
+            border: 3px solid #555;
+        }
+        input[type=email]:focus {
+            outline: none;
+            border: 3px solid #555;
+        }
+        input[type=password]:focus {
+            outline: none;
+            border: 3px solid #555;
+        }
        .navbar {
         overflow: hidden;
         background-color: #333;
@@ -186,13 +218,13 @@ else{
                 </button>
                 <div class="dropdown-content">
                 <a href="private_gallery.php">My Gallery</a>
+                <a href="camera.php">Photo Booth</a>
                   <a href="reset.php">Update Profile</a>
                   <a href="logout.php">Logout</a>
                 </div>
                 <?php endif ?>
             </div> 
-    </div>
-    <h2>User Authentication System</h2><hr>
+    </div><hr>
     <h3>Profile update</h3>
 
     <h4><?php echo $_SESSION['username']?></h4>
@@ -216,4 +248,5 @@ else{
         </table>
         </form>
 </body>
+<footer> &copy; Copyright tmentor <?php print date("Y")?></footer>
 </html>
