@@ -81,6 +81,9 @@
             border: solid 2px black;
             margin: 2px;
         }
+        a {
+            text-decoration: none;
+        }
     </style>
 
 </head>
@@ -94,21 +97,47 @@
         <button type="submit" name="upload_img">Upload</button>
     </form>
     <br>
-    <a href="private_gallery.php">Private gallery</a>
     <?php } ?>
     <hr style="border: dotted 2px;" />
     <header>
         
     <?php 
-        $query = "SELECT * FROM gallery ORDER BY id DESC";
-        $stmt = $DB_NAME->prepare($query);
-        $stmt->execute();
-        while($row = $stmt->fetch()){
+        try{
+            $query = "SELECT * FROM gallery";
+            $stmt = $DB_NAME->prepare($query);
+            $stmt->execute();
+            $number_of_results = $stmt->rowCount();
+            if(!isset($_GET['page'])){
+                $page = 1;
+            }
+            else{
+                if(is_numeric($_GET['page'])){
+                    $page = $_GET['page'];
+                }
+                else{
+                    $page = 1;
+                }
+            }
+            $result_per_page = 10;
+            $number_of_pages = ceil($number_of_results/$result_per_page);
+            $start_lmit_number = ($page - 1) * $result_per_page;
+            $query = "SELECT * FROM gallery ORDER BY id DESC LIMIT $start_lmit_number, $result_per_page";
+            $stmt = $DB_NAME->prepare($query);
+            $stmt->execute();
+            while($row = $stmt->fetch()){
                 echo "<div>
                         <a href='image.php?id=".$row['id']."'>
                             <img src='".$row['name']."'>
                         </a>
                     </div>";
+            }
+            echo "<hr>";
+            for($page = 1; $page <= $number_of_pages; $page++){
+                echo "<a href='gallery.php?page=".$page."'> ".$page." </a>";
+            }
+        }
+        catch(PDOException $err){
+
         }
     ?>
     </header>

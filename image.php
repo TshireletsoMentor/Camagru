@@ -211,6 +211,9 @@
         .dropdown:hover .dropdown-content {
             display: block;
         }
+        a {
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
@@ -221,7 +224,7 @@
             <a href="javascript:void(0)" class="dropbtn">Menu</a>
             <div class="dropdown-content">
             <a href="reset.php">Profile settings</a>
-            <a href="private_gallery.php">Private Gallery</a>
+            <a href="private_gallery.php">My Gallery</a>
             <a href="#">Camera</a>
             <a href="logout.php">Log out</a><?php }?>
             </div>

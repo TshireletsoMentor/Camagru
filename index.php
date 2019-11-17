@@ -12,48 +12,56 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>index</title>
     <style>
-        ul {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            background-color: #333;
+        .navbar {
+        overflow: hidden;
+        background-color: #333;
         }
-        li {
-            float: left;
+        .navbar a {
+        float: left;
+        font-size: 16px;
+        color: white;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
         }
-        li a, .dropbtn {
-            display: inline-block;
-            color: white;
-            text-align: center;
-            padding: 14px 16px;
-            text-decoration: none;
+        .dropdown {
+        float: left;
+        overflow: hidden;
         }
-        li a:hover, .dropdown:hover .dropbtn {
-            background-color: grey;
+        .dropdown .dropbtn {
+        font-size: 16px;  
+        border: none;
+        outline: none;
+        color: white;
+        padding: 14px 16px;
+        background-color: inherit;
+        font-family: inherit;
+        margin: 0;
         }
-        li.dropdown {
-            display: inline-block;
+        .navbar a:hover, .dropdown:hover .dropbtn {
+        background-color: grey;
         }
         .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
         }
         .dropdown-content a {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            text-align: left;
+        float: none;
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        text-align: left;
         }
-        .dropdown-content a:hover {background-color: #f1f1f1;}
-
+        .dropdown-content a:hover {
+        background-color: #ddd;
+        }
         .dropdown:hover .dropdown-content {
-            display: block;
+        display: block;
         }
     </style>
 </head>
@@ -63,19 +71,21 @@
     <img style='width:100px;height:100px;border-radius: 50%;border: solid 2px black' src='uploads/default.gif'></p>
     <?php endif ?>
     <hr>
-    <ul>
-        <li><a href="index.php">Home</a></li>
-        <li class="dropdown">
-            <?php if(isset($_SESSION['username'])){?>
-            <a href="javascript:void(0)" class="dropbtn">Menu</a>
-            <div class="dropdown-content">
-            <a href="reset.php">Profile settings</a>
-            <a href="private_gallery.php">Private Gallery</a>
-            <a href="#">Camera</a>
-            <a href="logout.php">Log out</a><?php }?>
-            </div>
-        </li>
-    </ul>
+    <div class="navbar">
+        <a href="index.php">Home</a>
+            <div class="dropdown">
+                <?php if (isset($_SESSION['id'])): ?>
+                <button class="dropbtn">Menu 
+                  <i class="fa fa-caret-down"></i>
+                </button>
+                <div class="dropdown-content">
+                  <a href="private_gallery.php">My Gallery</a>
+                  <a href="reset.php">Update Profile</a>
+                  <a href="logout.php">Logout</a>
+                </div>
+                <?php endif ?>
+            </div> 
+    </div>
     <?php if(!isset($_SESSION['username'])): ?>
     <p>You are currently not signed in. <hr>
         <?php include_once 'login.php'; ?><br>
@@ -90,4 +100,6 @@
     <hr>
     <?php include_once 'gallery.php'; ?>
 </body>
+<footer>
+&copy; </footer>
 </html>
