@@ -2,6 +2,7 @@
     include_once 'config/connect.php';
     include_once 'session.php';
     include_once 'config/util.php';
+    include_once 'logout_auto.php';
 
 
     function setComment($DB_NAME, $imageid, $userid){

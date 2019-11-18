@@ -156,6 +156,31 @@
         return($success);
     }
 
+    function sendUpdatesEmail($email, $oldusername, $form_changes){
+        
+        $subject = "<i>[Camagru]</i> - Profile updates";
+
+        $header = 'MIME-Version: 1.0'."\r\n";
+        $header .= 'Content-type: text/html; charset=UTF-8'."\r\n";
+        $header .= 'From: Camagru@DoNotReply.co.za'."\r\n";
+
+        $message = '
+        <html>
+            <head>
+                <title>'.$subject.'</title>
+            </head>
+            <body>
+                
+                Hi there '.$oldusername.'.<br>
+                Changes to you profile have been made, these include: <br><br>'.implode("<br>", $form_changes).'<br><br>
+
+                If this email does not concern you, please ignore this email.
+            </body>
+        ';
+
+        mail($email, $subject, $message, $header);
+    }
+
     function sendReset($email, $pass){
         $subject = "<i>[Camagru]</i> - Password Reset";
 
@@ -202,7 +227,6 @@
                 <a href="http://'.$url.'forgot_password_login.php?token='.$hash_token.'">Change password</a><br>
                 Alternatively, if the link does not work, paste the url:<br> http://'.$url.'forgot_password_login.php?token='.$hash_token.'<br>
                 If this email does not concern you, please ignore this email.
-                Please log on to <i>Camagru</i> and change this password.<br>
 
             </body>
         ';
@@ -215,5 +239,58 @@
             echo "Error";
         }
         return($success);
+    }
+
+    function sendReset($email, $pass){
+        $subject = "<i>[Camagru]</i> - Password Reset";
+
+        $header = 'MIME-Version: 1.0'."\r\n";
+        $header .= 'Content-type: text/html; charset=UTF-8'."\r\n";
+        $header .= 'From: Camagru@DoNotReply.co.za'."\r\n";
+
+        $message = '
+        <html>
+            <head>
+                <title>'.$subject.'</title>
+            </head>
+            <body>
+                Your password has been reset. Your new password is: '.$pass.'.<br>
+                Please log on to <i>Camagru</i> and change this password.<br>
+                If this email does not concern you, please ignore this email.
+            </body>
+        ';
+
+        $retval = mail($email, $subject, $message, $header);
+        if ($retval == true){
+            $success = "<ul><li style='color:green;'>Password reset mail has been sent to ".$email."</li></ul>";
+        }
+        else{
+            echo "Error";
+        }
+        return($success);
+    }
+
+    function sendEmailReset($email, $token, $url){
+        $subject = "<i>[Camagru]</i> - Email Reset";
+
+        $header = 'MIME-Version: 1.0'."\r\n";
+        $header .= 'Content-type: text/html; charset=UTF-8'."\r\n";
+        $header .= 'From: Camagru@DoNotReply.co.za'."\r\n";
+
+        $message = '
+        <html>
+            <head>
+                <title>'.$subject.'</title>
+            </head>
+            <body>
+                You have indicated that you want to reset your email address. To change to your new email click the link: <br>
+                <a href="http://'.$url.'update_email.php?token='.$token.'&email='.$email.'">Change email address</a><br>
+                Alternatively, if the link does not work, paste the url:<br> http://'.$url.'update_email.php?token='.$token.'&email='.$email.'<br>
+                If this email does not concern you, please ignore this email.
+
+            </body>
+        ';
+
+        mail($email, $subject, $message, $header);
     }
 ?>

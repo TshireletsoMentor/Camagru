@@ -31,6 +31,7 @@
                     $_SESSION['username'] = $username;
                     $_SESSION['email'] = $email;
                     $_SESSION['preference'] = $pref;
+                    $_SESSION['last_login_timestamp'] = time(); 
                     redirecto("index");}
                 else{ 
                     $result = flashMessage("You need to verify your email, check your inbox");

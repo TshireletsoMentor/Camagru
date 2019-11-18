@@ -2,6 +2,7 @@
 include_once 'config/connect.php';
 include_once 'config/util.php';
 include_once 'session.php';
+include_once 'logout_auto.php';
 
 if(!isset($_SESSION['username'])){
     redirecto("index");
@@ -13,12 +14,14 @@ else{
         $password1 = htmlentities($_POST['new_password']);
         $password2 = htmlentities($_POST['retype_password']);
         $email = htmlentities($_POST['email']);
+        //$oldemail = $_SESSION['email];
         if(isset($_POST['PrefBtn'])){
             $pref = htmlentities($_POST['PrefBtn']);
         }
 
         $form_errors = array();
         $form_success = array();
+        $form_changes = array ();
     }
     if(isset($email)){
         if(duplicate("users", "email", $email, $DB_NAME)){
@@ -46,6 +49,8 @@ else{
                 $stmtupdate1 = $DB_NAME->prepare($queryupdate1);
                 $stmtupdate1->execute(array(':username' => $username, ':id' => $id));
                 $form_success[] = "Username reset was successful.";
+                $form_changes[] = "Username changed to: ".$username;
+                $oldusername = $_SESSION['username'];
                 $_SESSION['username'] = $username;
             }
             catch (PDOException $err){
@@ -65,6 +70,7 @@ else{
                 $stmtupdate2 = $DB_NAME->prepare($queryupdate2);
                 $stmtupdate2->execute(array(':password' => $hased_password, ':id' => $id));
                 $form_success[] = "Password reset was successful.";
+                $form_changes[] = "Password has been changed";
             }
             catch (PDOException $err){
                 $result = flashMessage("An error occured.".$err->getMessage());
@@ -82,7 +88,14 @@ else{
                 $stmtupdate3 = $DB_NAME->prepare($queryupdate3);
                 $stmtupdate3->execute(array(':email' => $email, ':id' => $id));
                 $form_success[] = "Email reset was successful.";
+                $form_changes[] = "Email: ".$email."needs to be verified before changes can be commited - please check inbox thereof.";
                 $_SESSION['email'] = $email;
+
+                /*
+                 $url = $_SERVER['HTTP_HOST'].str_replace("reset.php", "", $_SERVER['REQUEST_URI']);
+                 sendEmailReset($email, $token, $url);
+
+                */
             }
             catch (PDOException $err){
                 $result = flashMessage("An error occured.".$err->getMessage());
@@ -100,6 +113,7 @@ else{
                 $stmtupdate4 = $DB_NAME->prepare($queryupdate4);
                 $stmtupdate4->execute(array(':preference' => $pref, ':id' => $id));
                 $form_success[] = "Notification preference was set to: ".$pref;
+                $form_changes[] = "Notification preference was set to: ".$pref;
                 $_SESSION['preference'] = $pref;
             }
             catch (PDOException $err){
@@ -111,6 +125,9 @@ else{
         }
     }
     if(isset($form_success) && !empty($form_success)){$result = flashMessage("Update(s): ".count($form_success)."<br>", "Pass");}
+    if(isset($form_changes) && !empty($form_changes)){
+        sendUpdatesEmail($oldemail, $oldusername, $form_changes);
+    }
 }
 ?>
 

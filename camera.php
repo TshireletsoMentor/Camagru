@@ -1,5 +1,7 @@
 <?php
     include_once "session.php";
+    include_once 'logout_auto.php';
+    
     $id = $_SESSION['id'];
     $baseimage = $_POST['baseimage'];
     //var_dump($baseimage);

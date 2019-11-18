@@ -102,13 +102,14 @@
         <?php include_once 'login.php'; ?><br>
         <a href="forgot_password2.php">Forgot password?</a></p>
     <?php else: ?><br>
-    <?php include_once 'upload.php';?>
+    <?php   include_once 'upload.php';
+            include_once 'logout_auto.php';?>
     <p><?php if(isset($_SESSION['username'])) echo "<h1><b>".$_SESSION['username']."</b></h1>"?><br>
     <!-- <a href="reset.php">User settings</a>
     <br><a href="logout.php">Log out</a>-->
     </p>
-    <?php endif ?>
+    <?php endif?>
     <hr>
-    <?php include_once 'gallery.php'; ?>
+    <?php include 'gallery.php'; ?>
 </body>
 </html>
