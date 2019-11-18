@@ -47,6 +47,7 @@
     <style>
         input{
             border: 1px solid #555;
+            color:black;
         }
         input[type=submit] {
             outline: none;
@@ -60,6 +61,19 @@
         input[type=password]:focus {
             outline: none;
             border: 3px solid #555;
+        }
+        a:link {
+        color: red;
+        }
+
+        /* visited link */
+        a:visited {
+        color: green;
+        }
+
+        /* mouse over link */
+        a:hover {
+        color: hotpink;
         }
     </style>
 </head>
