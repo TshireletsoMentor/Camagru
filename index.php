@@ -102,7 +102,7 @@
         <?php include_once 'login.php'; ?><br>
         <a href="forgot_password2.php">Forgot password?</a></p>
     <?php else: ?><br>
-    <?php include_once 'upload_profile.php';?>
+    <?php include_once 'upload.php';?>
     <p><?php if(isset($_SESSION['username'])) echo "<h1><b>".$_SESSION['username']."</b></h1>"?><br>
     <!-- <a href="reset.php">User settings</a>
     <br><a href="logout.php">Log out</a>-->
@@ -111,5 +111,4 @@
     <hr>
     <?php include_once 'gallery.php'; ?>
 </body>
-<footer> &copy; Copyright tmentor <?php print date("Y")?></footer>
 </html>

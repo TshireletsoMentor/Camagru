@@ -1,6 +1,17 @@
 <?php
     include_once "session.php";
+    $id = $_SESSION['id'];
+    $baseimage = $_POST['baseimage'];
+    //var_dump($baseimage);
 
+    if(!empty($baseimage)){
+        $baseimage_name = "camera".$id.".png";
+        $imagepath = "uploads/".$baseimage_name;
+        $imgurl = str_replace("data:image/png;base64,", "", $baseimage);
+        //$imgurl = str_replace(" ", "+", $imgurl);
+        $imgdecode = base64_decode($imgurl);
+        file_put_contents($imagepath, $imgdecode);
+    }
 ?>
 
 <!DOCTYPE html>
@@ -11,7 +22,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Booth</title>
     <style>
-                body{
+        body{
             position: relative;
             min-height: 100%;
             min-height: 100vh;
@@ -79,7 +90,8 @@
             margin: auto;
         }
         .booth-capture-button{
-            display: block;
+            border:none;
+            border-radius: 5px;
             margin: 10px 0;
             padding: 10px 20px;
             background-color: black;
@@ -90,6 +102,16 @@
         #canvas{
             display:none;
         }
+        .bar{
+            border-radius: 5px;
+            margin: 10px 0;
+            padding: 10px 20px;
+            background-color: black;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+        }
+        
     </style>
 </head>
 <body>
@@ -112,8 +134,23 @@
     <div class="booth">
         <video id="video" width="400" height="300" autoplay></video>
         <canvas id="canvas" width="400" height="300"></canvas>
-        <a href="#" id="capture" class="booth-capture-button">Take photo</a>
-        <img id="image" style="width:100%;height:400px;"src="uploads/default.gif" alt="">
+        <div style="margin-left:auto;marign-right:auto;">
+            <button id="capture" class="booth-capture-button">Take photo</button>
+            <select class="bar" name="" id="">
+                <option value="none">Normal</option>
+                <option value="">Greyscale</option>
+                <option value="">Sepia</option>
+                <option value="">Invert</option>
+                <option value="">Hue</option>
+                <option value="">Blue</option>
+                <option value="">Contrast</option>
+                <option value="">Saturate</option>
+            </select>
+            <button id="save" class="booth-capture-button">Save</button>
+        </div>
+        <img id="image" style="width:100%;height:100%;"src="uploads/default.gif" alt="">
+        
+
         <script  src="video.js"></script>
     </div>
 </body>

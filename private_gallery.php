@@ -183,6 +183,8 @@
         redirecto("index");
     }else{
         $id = $_SESSION['id'];
+        include_once 'upload.php';
+        echo "<br><br>";
     }?>
      <form action="" method="POST" enctype="multipart/form-data">
         <input type="text" name="filetitle" placeholder="Image title...">
@@ -190,7 +192,7 @@
         <button type="submit" name="upload_img2">Upload</button>
     </form>
     <?php if(isset($result)){echo $result;}
-        if(isset($success)){
+        if(isset($success) && !isset($result)){
             if(count($success) < 2){
                 echo flashMessage("Upload successful", "Pass");
             }

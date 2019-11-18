@@ -226,7 +226,7 @@ else{
             </div> 
     </div><hr>
     <h3>Profile update</h3>
-
+    <?php include_once 'upload_profile.php';?>
     <h4><?php echo $_SESSION['username']?></h4>
 
     <?PHP if(isset($result)) echo $result; ?>

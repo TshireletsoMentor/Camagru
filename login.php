@@ -3,6 +3,7 @@
     include_once "config/connect.php";
     include_once "config/util.php";
 
+
     if(isset($_POST['loginBtn'])){
         $user = htmlentities($_POST['username']);
         $password = htmlentities($_POST['password']);
@@ -12,6 +13,11 @@
         $stmt->execute(array(':username' => $user));
 
         while ($row = $stmt->fetch()){
+            if(isset($_POST['rememberme'])){
+                setcookie("username", $user, time()+(365*60*24*24));
+                setcookie("password", $password, time()+(365*60*24*24));
+            }
+
             $id = $row['id'];
             $hashed_password = $row['password'];
             $username = $row['username'];
@@ -54,6 +60,9 @@
             background-color: black;
             color: white;
         }
+        input[type=text]{
+            color:black;
+        }
         input[type=text]:focus {
             outline: none;
             border: 3px solid #555;
@@ -62,19 +71,6 @@
             outline: none;
             border: 3px solid #555;
         }
-        a:link {
-        color: red;
-        }
-
-        /* visited link */
-        a:visited {
-        color: green;
-        }
-
-        /* mouse over link */
-        a:hover {
-        color: hotpink;
-        }
     </style>
 </head>
 <body>
@@ -82,12 +78,15 @@
     <?php if(isset($result)) echo $result;?>
     <form action="" method="post">
         <table>
-            <tr><td>Username:</td><td><input type="text" value="" name="username" placeholder="Username" required oninvalid="this.setCustomValidity('Enter username')"
+            <tr><td>Username:</td><td><input style="color:black" type="text" value="<?php if(isset($_COOKIE['username'])){echo $_COOKIE['username'];}?>" name="username" placeholder="Username" required oninvalid="this.setCustomValidity('Enter username')"
               oninput="this.setCustomValidity('')"></td></tr>
-            <tr><td>Password:</td><td><input type="password" value="" name="password" placeholder="Password" required oninvalid="this.setCustomValidity('Enter password')"
+            <tr><td>Password:</td><td><input type="password" value="<?php if(isset($_COOKIE['password'])){echo $_COOKIE['password'];}?>" name="password" placeholder="Password" required oninvalid="this.setCustomValidity('Enter password')"
               oninput="this.setCustomValidity('')"></td></tr>
-            <tr><td><a href="register.php">Sign up</a></td><td><input style="float: right;" type="submit" name="loginBtn" value="log in"></td></tr>
+            <tr><td></td><td><input style="float: right;" type="submit" name="loginBtn" value="log in"></td></tr>
+            <tr><td>Remember me </td><td><input type="checkbox" name="rememberme"></td></tr>
+            <tr><td><a href="register.php">Sign up</a></td><td></td></tr>
         </table>
     </form>
+
 </body>
 </html>

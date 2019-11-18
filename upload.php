@@ -1,35 +1,36 @@
 <?php
-    if(isset($_POST['submit'])){
-        $file = $_FILES['file'];
-        $fileName = $_FILES['file']['name'];
-        $fileTmpName= $_FILES['file']['tmp_name'];
-        $fileSize = $_FILES['file']['size'];
-        $fileError = $_FILES['file']['error'];
-        $fileType = $_FILES['file']['type'];
+    include_once 'config/connect.php';
+    include_once 'session.php';
+    include_once 'config/util.php';
+        
+    if(isset($_SESSION['id'])){
+        $id = $_SESSION['id'];
+        try{
+            $query = "SELECT `userid`, `status` FROM `pro_img` WHERE userid = :userid";
+            $stmt = $DB_NAME->prepare($query);
+            $stmt->execute(array(':userid' => $_SESSION['id']));
+            $row = $stmt->fetch();
 
-        $fileExt = explode('.', $fileName);
-        $fileActualExt = strtolower(end($fileExt));
-
-        $allowed = array('jpg', 'jpeg', 'png', 'gif');
-        if(in_array($fileActualExt, $allowed)){
-            if($fileError === 0){
-                if($fileSize < 50000){
-                    $fileNameNew = uniqid('', true).".".$fileActualExt;
-                    $fileDestination = 'uploads/'.$fileNameNew;
-                    move_uploaded_file($fileTmpName, $fileDestination);
-                    header("Location: index.php?upload_successful")
-;                }
-                else
-                echo "Uploaded file is too large, maximum file size: 50 mb.";
+            if($row['status'] == 1){
+                $filename = "uploads/profile"."$id"."*";
+                $fileinfo = glob($filename);
+                $fileext = explode(".", $fileinfo[0]);
+                $fileactualext = $fileext[1];
+                $file_display = "uploads/profile"."$id".".".$fileactualext;
+                
+                echo "<img style='width:100px;height:100px;border-radius: 50%;border: solid 2px black' src='"."$file_display"."?'".mt_rand()."><br>";  
             }
-            else
-                echo "Error uploading file, please try again.";
+            else{
+                echo "<img style='width:100px;height:100px;border-radius: 50%;border: solid 2px black' src='uploads/default.jpg'>"."<br>";
+            }
         }
-        else{
-            echo "Only image files allowed, these include: 'jpg', 'jpeg', 'png' and 'gif'.";
+        catch (PDOException $err){
+            echo "Error".$err->getMessage();
         }
-
     }
+    else{
+        redirecto("index");
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -37,12 +38,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Profile</title>
 </head>
 <body>
-    <form action="" method="POST" enctype="multipart/form-data">
-        <input type="file" name="file">
-        <button type="submit" name="submit">Upload image</button>
-    </form>   
 </body>
 </html>

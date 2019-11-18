@@ -109,6 +109,10 @@
             background:black;
             color: white;
         }
+        footer {
+            position: absolute;
+            right: 0;bottom:0;
+        }
     </style>
 
 </head>
@@ -167,4 +171,5 @@
     ?>
     </header>
     </body>
+    <footer> &copy; Copyright tmentor <?php print date("Y")?></footer>
 </html>

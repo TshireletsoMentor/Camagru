@@ -287,8 +287,8 @@
             echo $row['title'];}
             else{redirecto('index');}
             if($row['userid'] == $_SESSION['id']){
-            echo '  <br><br><div class="delete"><a href="delete.php?id='.$imageid.'">DELETE</a></div><br><br>';}
-            echo '  <a href="like.php?id='.$imageid.'">'.$like.'&#x1f44d</a>';
+            echo '  <br><br><div class="delete"><a href="delete.php?id='.$imageid.'">DELETE</a></div><br>';}
+            echo '  <br><a href="like.php?id='.$imageid.'">'.$like.'&#x1f44d</a>';
             echo    '<form action="'.setComment($DB_NAME, $imageid, $userid).'" method="post">
                         <input type="hidden" name="username" value="'.$username.'">
                         <textarea name="comment" placeholder="Enter comment..."></textarea><br>
