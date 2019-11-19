@@ -1,9 +1,12 @@
 <?php
     include_once "session.php";
     include_once 'logout_auto.php';
+    include_once "config/util.php";
     
     $id = $_SESSION['id'];
-    $baseimage = $_POST['baseimage'];
+    if(!empty($_POST)){
+        $baseimage = $_POST['baseimage'];
+    }
     //var_dump($baseimage);
 
     if(!empty($baseimage)){
@@ -15,7 +18,7 @@
         file_put_contents($imagepath, $imgdecode);
     }
 ?>
-
+ 
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -87,6 +90,7 @@
         }
         .booth{
             width: 400px;
+            height:100%;
             background: #ccc;
             border: 10px solid #ddd;
             margin: auto;
@@ -101,6 +105,10 @@
             text-align: center;
             text-decoration: none;
         }
+        .booth-capture-button select{
+            padding:10px;
+            height:50px;
+        }
         #canvas{
             display:none;
         }
@@ -112,6 +120,16 @@
             color: white;
             text-align: center;
             text-decoration: none;
+        }
+        .filters{
+            display:inline;
+            text-align:center;
+        }
+        .filters img{
+            padding:2px;
+            height:50px;
+            width:50px;
+            border: 2px solid black;
         }
         
     </style>
@@ -151,9 +169,17 @@
             <button id="save" class="booth-capture-button">Save</button>
         </div>
         <img id="image" style="width:100%;height:100%;"src="uploads/default.gif" alt="">
-        
-
         <script  src="video.js"></script>
+        <div class="filters">
+            <!-- <img src="uploads/filters/beard.png" alt="beard"> -->
+            <img src="uploads/filters/print.png" id="print" alt="print">
+            <img src="uploads/filters/bow.png" id="bow" alt="bow">
+            <img src="uploads/filters/heart.png" id="heart" alt="heart">
+            <img src="uploads/filters/beast.png" id="beast" alt="beast">
+            <img src="uploads/filters/starwars.png" id="starwars" alt="starwars">
+            <img src="uploads/filters/cat.png" id="cat" alt="cat">
+            <img src="uploads/filters/ghost.png" id="ghost" alt="ghost">
+        </div>
     </div>
 </body>
 <footer> &copy; Copyright tmentor <?php print date("Y")?></footer>

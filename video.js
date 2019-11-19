@@ -4,6 +4,14 @@
         video = document.getElementById('video');
         image = document.getElementById('image');
         save = document.getElementById('save');
+        print = document.getElementById('print');
+        bow = document.getElementById('bow');
+        heart = document.getElementById('heart');
+        beast = document.getElementById('beast');
+        starwars = document.getElementById('starwars');
+        cat = document.getElementById('cat');
+        ghost = document.getElementById('ghost');
+
         vendorUrl = window.URL || window.webkitURL;
 
         navigator.getMedia =    navigator.getUserMedia ||
@@ -19,7 +27,7 @@
         }, function(error){
             // an error occured
         });
-
+ 
         video.addEventListener('play', function() {
           //  draw(this, context, 400, 300);
         }, false);
