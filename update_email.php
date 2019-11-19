@@ -1,6 +1,7 @@
 <?php
 include_once 'config/connect.php';
 include_once 'config/util.php';
+include_once 'session.php';
 
 
 if(!empty($_GET['token']) && !empty($_GET['email'])){
@@ -8,14 +9,14 @@ if(!empty($_GET['token']) && !empty($_GET['email'])){
     $token = htmlentities($_GET['token']);
     $newemail = htmlentities($_GET['email']);
 
-    $query = "SELECT id, verified FROM `users` WHERE token=:$token";    
+    $query = "SELECT id, verified FROM `users` WHERE token = :token";    
     $stmt = $DB_NAME->prepare($query);    
     $stmt->execute(array(':token' => $token));
 
     $row = $stmt->fetch();
     $id = $row['id'];
 
-    if ($row == 1){
+    if ($stmt->rowCount() == 1){
         if($row['verified'] == 'Y'){
 
             $query = "UPDATE users SET email=:email WHERE id = :id";
@@ -29,6 +30,7 @@ if(!empty($_GET['token']) && !empty($_GET['email'])){
                 $stmt = $DB_NAME->prepare($queryupdate);
                 $stmt->execute(array(':token' => $token_new, 'id' => $id));
                 $result = flashMessage("Your email address has been changed.", "Pass");
+                $_SESSION['email'] = $newemail;
 
             }
             catch (PDOException $err){

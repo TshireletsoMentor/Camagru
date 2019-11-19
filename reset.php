@@ -14,6 +14,8 @@ else{
         $password1 = htmlentities($_POST['new_password']);
         $password2 = htmlentities($_POST['retype_password']);
         $email = htmlentities($_POST['email']);
+        $oldemail = $_SESSION['email'];
+        $oldusername = $_SESSION['username'];
         //$oldemail = $_SESSION['email];
         if(isset($_POST['PrefBtn'])){
             $pref = htmlentities($_POST['PrefBtn']);
@@ -84,18 +86,24 @@ else{
         $form_errors = array_merge($form_errors, check_email($_POST));      
         if(empty($form_errors)){ 
             try{
-                $queryupdate3 = "UPDATE users SET `email` = :email WHERE `id` = :id";
-                $stmtupdate3 = $DB_NAME->prepare($queryupdate3);
-                $stmtupdate3->execute(array(':email' => $email, ':id' => $id));
-                $form_success[] = "Email reset was successful.";
-                $form_changes[] = "Email: ".$email."needs to be verified before changes can be commited - please check inbox thereof.";
-                $_SESSION['email'] = $email;
+                $query = "SELECT token FROM `users` WHERE username = :username";    
+                $stmt = $DB_NAME->prepare($query);    
+                $stmt->execute(array(':username' => $oldusername));
+            
+                $row = $stmt->fetch();
+                $token = $row['token'];
 
-                /*
+                //$queryupdate3 = "UPDATE users SET `email` = :email WHERE `id` = :id";
+                //$stmtupdate3 = $DB_NAME->prepare($queryupdate3);
+                //$stmtupdate3->execute(array(':email' => $email, ':id' => $id));
+                $form_success[] = "Email reset was successful.";
+                $form_changes[] = "Email changed to: ".$email.". This email needs to be verified before changes can be commited - please check inbox thereof.";
+                //$_SESSION['email'] = $email;
+
+        
                  $url = $_SERVER['HTTP_HOST'].str_replace("reset.php", "", $_SERVER['REQUEST_URI']);
                  sendEmailReset($email, $token, $url);
 
-                */
             }
             catch (PDOException $err){
                 $result = flashMessage("An error occured.".$err->getMessage());
