@@ -4,18 +4,38 @@
     include_once "config/util.php";
     
     $id = $_SESSION['id'];
-    if(!empty($_POST)){
-        $baseimage = $_POST['baseimage'];
-    }
-    //var_dump($baseimage);
+    if(isset($_POST['upload_pro'])){
+        $file = $_FILES['filepro'];
+        $fileName = $_FILES['filepro']['name'];
+        $fileTmpName= $_FILES['filepro']['tmp_name'];
+        $fileSize = $_FILES['filepro']['size'];
+        $fileError = $_FILES['filepro']['error'];
+        $fileType = $_FILES['filepro']['type'];
 
-    if(!empty($baseimage)){
-        $baseimage_name = "camera".$id.".png";
-        $imagepath = "uploads/".$baseimage_name;
-        $imgurl = str_replace("data:image/png;base64,", "", $baseimage);
-        //$imgurl = str_replace(" ", "+", $imgurl);
-        $imgdecode = base64_decode($imgurl);
-        file_put_contents($imagepath, $imgdecode);
+        $fileExt = explode('.', $fileName);
+        $fileActualExt = strtolower(end($fileExt));
+
+        $allowed = array('jpg', 'jpeg', 'png', 'gif');
+        if(in_array($fileActualExt, $allowed)){
+            if($fileError === 0){
+                if($fileSize < 5000000){
+                    $fileNameNew = "profile".$id.".".$fileActualExt;
+                    $fileDestination = 'uploads/'.$fileNameNew;
+                    move_uploaded_file($fileTmpName, $fileDestination);
+                    
+                    $query = "UPDATE pro_img SET status = 1 WHERE userid = :userid";
+                    $stmt = $DB_NAME->prepare($query);
+                    $stmt->execute(array(':userid' => $id));
+                }
+                else
+                echo flashMessage("Uploaded file is too large, maximum file size: 5 mb.");
+            }
+            else
+                echo flashMessage("Error uploading file, please try again.");
+        }
+        else{
+            echo flashMessage("Only image files are allowed, these include: 'jpg', 'jpeg', 'png' and 'gif'.");
+        }
     }
 ?>
  
@@ -96,21 +116,36 @@
             margin: auto;
         }
         .booth-capture-button{
-            border:none;
+            align-content:center;
+            border: 2px solid black;
             border-radius: 5px;
-            margin: 10px 0;
+            margin: 10px;
             padding: 10px 20px;
             background-color: black;
             color: white;
             text-align: center;
             text-decoration: none;
         }
-        .booth-capture-button select{
-            padding:10px;
-            height:50px;
+        input{
+            background-color:black;
         }
+        input[type=file]{
+            margin-left:10px;
+            padding: 2px 2px;
+            border-radius: 5px;
+            background-color:black;
+            color:white;
+        }
+        button[type=submit]{
+            text-align: center;
+            padding: 4px 4px;
+            border-radius: 5px;
+            background-color:black;
+            color:white;
+        }
+
         #canvas{
-            display:none;
+            position:relative;
         }
         .bar{
             border-radius: 5px;
@@ -153,33 +188,31 @@
     </div>
     <div class="booth">
         <video id="video" width="400" height="300" autoplay></video>
-        <canvas id="canvas" width="400" height="300"></canvas>
+
         <div style="margin-left:auto;marign-right:auto;">
             <button id="capture" class="booth-capture-button">Take photo</button>
-            <select class="bar" name="" id="">
-                <option value="none">Normal</option>
-                <option value="">Greyscale</option>
-                <option value="">Sepia</option>
-                <option value="">Invert</option>
-                <option value="">Hue</option>
-                <option value="">Blue</option>
-                <option value="">Contrast</option>
-                <option value="">Saturate</option>
-            </select>
+            <?php echo '<form action="" method="POST" enctype="multipart/form-data">
+                        <input type="file" name="filepro">
+                        <button type="submit" name="upload_pro">Upload image</button>
+                        </form>'?>
             <button id="save" class="booth-capture-button">Save</button>
         </div>
-        <img id="image" style="width:100%;height:100%;"src="uploads/default.gif" alt="">
-        <script  src="video.js"></script>
+        <canvas id="canvasOverlay" width="100" height="100" style="position:absolute;"></canvas>
+        <img id="overlay" src="" width="100" height="100" alt="" style="position:absolute;">
+        <canvas id="canvasOverlay2" width="400" height="300" style="position:absolute;border:2px solid blue;"></canvas>
+        <img id="overlay2" src="" width="400" height="300" alt="" style="position:absolute;border:2px solid white;">
+        <canvas id="canvas" width="400" height="300" ></canvas>
+        
         <div class="filters">
             <!-- <img src="uploads/filters/beard.png" alt="beard"> -->
-            <img src="uploads/filters/print.png" id="print" alt="print">
-            <img src="uploads/filters/bow.png" id="bow" alt="bow">
-            <img src="uploads/filters/heart.png" id="heart" alt="heart">
-            <img src="uploads/filters/beast.png" id="beast" alt="beast">
-            <img src="uploads/filters/starwars.png" id="starwars" alt="starwars">
-            <img src="uploads/filters/cat.png" id="cat" alt="cat">
-            <img src="uploads/filters/ghost.png" id="ghost" alt="ghost">
+            <img id="print" src="uploads/filters/print.png"  alt="" width="100" height="100">
+            <img src="uploads/filters/heart.png" id="heart" alt="heart" width="100" height="100">
+            <img src="uploads/filters/meme-removebg-preview.png" id="beast" alt="beast" width="400" height="300">
+            <img src="uploads/filters/starwars.png" id="starwars" alt="starwars" width="100" height="100">
+            <img src="uploads/filters/cat.png" id="cat" alt="cat" width="100" height="100">
+            <img src="uploads/filters/ghost.png" id="ghost" alt="ghost" width="100" height="100">
         </div>
+        <script  src="video.js"></script>
     </div>
 </body>
 <footer> &copy; Copyright tmentor <?php print date("Y")?></footer>
