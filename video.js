@@ -4,14 +4,14 @@
         // overlay2 = document.getElementById('overlay2');
     let canvasOverlay = document.getElementById('canvasOverlay');
     
-        print = document.getElementById('print');
-        save = document.getElementById('save');
-        bow = document.getElementById('bow');
-        heart = document.getElementById('heart');
-        beast = document.getElementById('beast');
-        starwars = document.getElementById('starwars');
-        cat = document.getElementById('cat');
-        ghost = document.getElementById('ghost');
+        // print = document.getElementById('print');
+        // save = document.getElementById('save');
+        // bow = document.getElementById('bow');
+        // heart = document.getElementById('heart');
+        // beast = document.getElementById('beast');
+        // starwars = document.getElementById('starwars');
+        // cat = document.getElementById('cat');
+        // ghost = document.getElementById('ghost');
 
         //vendorUrl = window.URL || window.webkitURL;
 
@@ -34,14 +34,32 @@
         //   //  draw(this, context, 400, 300);
         // }, false);
         video.addEventListener('canplay', function(){
-            canvasOverlay.width = video.offsetWidth;
-            canvasOverlay.height = video.offsetHeight;
+            canvasOverlay.width = 400;
+            canvasOverlay.height = 300;
+            // canvasOverlay.height = video.offsetHeight;
         })
         function addSticker(stickerid){
            document.getElementById(stickerid);
            stickerobj = new Image;
            stickerobj.src = "uploads/filters/"+stickerid+".png";
-           canvasOverlay.getContext('2d').drawImage(stickerobj, 0, 0);
+           if(stickerid = ghost){
+                canvasOverlay.getContext('2d').drawImage(stickerobj, 0, 0, 400, 300);
+           }
+           else if (stickerid = starwars){
+               canvasOverlay.getContext('2d').drawImage(stickerobj, 0, 0, 100, 100);
+           }
+           else if (stickerid = ghost){
+            canvasOverlay.getContext('2d').drawImage(stickerobj, 0, 0, 100, 100);
+            }
+            else if (stickerid = ghost){
+                canvasOverlay.getContext('2d').drawImage(stickerobj, 0, 0, 100, 100);
+            }
+            else if (stickerid = ghost){
+                canvasOverlay.getContext('2d').drawImage(stickerobj, 0, 0, 100, 100);
+            }
+            else{
+                canvasOverlay.getContext('2d').drawImage(stickerobj, 0, 0, 100, 100);
+            }
         }
 
         var canvas = document.getElementById('canvas');

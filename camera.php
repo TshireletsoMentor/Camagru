@@ -2,7 +2,7 @@
     include_once "session.php";
     include_once 'logout_auto.php';
     include_once "config/util.php";
-    
+     
     $id = $_SESSION['id'];
     if(isset($_POST['upload_pro'])){
         $file = $_FILES['filepro'];
@@ -19,13 +19,7 @@
         if(in_array($fileActualExt, $allowed)){
             if($fileError === 0){
                 if($fileSize < 5000000){
-                    $fileNameNew = "profile".$id.".".$fileActualExt;
-                    $fileDestination = 'uploads/'.$fileNameNew;
-                    move_uploaded_file($fileTmpName, $fileDestination);
-                    
-                    $query = "UPDATE pro_img SET status = 1 WHERE userid = :userid";
-                    $stmt = $DB_NAME->prepare($query);
-                    $stmt->execute(array(':userid' => $id));
+                    $fileNameNew = $id.".".$fileActualExt;                 
                 }
                 else
                 echo flashMessage("Uploaded file is too large, maximum file size: 5 mb.");
@@ -166,9 +160,12 @@
             width:52px;
             border: 2px solid black;
         }
+        #canvas{
+        }
         #canvasOverlay{
-            position: absolute;
-            bottom: 656px;
+            position: fixed;
+            border:2px solid blue;
+            bottom: 610px;
         }
     </style>
 </head>
@@ -194,20 +191,19 @@
 
         <div style="margin-left:auto;marign-right:auto;">
             <button id="capture" class="booth-capture-button">Take photo</button>
+            <button id="clear" class="booth-capture-button">Clear</button>
             <?php echo '<form action="" method="POST" enctype="multipart/form-data">
-                        <input type="file" name="filepro">
-                        <button type="submit" name="upload_pro">Upload image</button>
+                        <input type="file" id="file-input" name="file">
                         </form>'?>
             <button id="save" class="booth-capture-button">Save</button>
         </div>
-        <canvas id="canvasOverlay" width="100" height="100""></canvas>
-        <canvas id="canvas" width="400" height="300" style="border:2px solid blue" ></canvas>
-        
+        <canvas id="canvasOverlay" width="400" height="300" style="border:2px solid white;"></canvas>
+        <canvas id="canvas" width="400" height="300" style="border:2px solid blue;" ></canvas>
+        <!-- <img id="upload" src="" alt="upload"> -->
+
         <div class="filters">
-            <!-- <img src="uploads/filters/beard.png" alt="beard"> -->
-            <img id="print" src="uploads/filters/print.png"  alt="" width="100" height="100" onclick="addSticker(this.id)">
+            <!-- <img id="upload" src="" alt="upload"> -->
             <img src="uploads/filters/heart.png" id="heart" alt="heart" width="100" height="100" onclick="addSticker(this.id)">
-            <img src="uploads/filters/meme-removebg-preview.png" id="beast" alt="beast" width="400" height="300" onclick="addSticker(this.id)">
             <img src="uploads/filters/starwars.png" id="starwars" alt="starwars" width="100" height="100" onclick="addSticker(this.id)">
             <img src="uploads/filters/cat.png" id="cat" alt="cat" width="100" height="100" onclick="addSticker(this.id)">
             <img src="uploads/filters/ghost.png" id="ghost" alt="ghost" width="100" height="100" onclick="addSticker(this.id)">
