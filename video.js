@@ -1,8 +1,9 @@
-(function(){
+
     var video = document.getElementById('video');
         overlay = document.getElementById('overlay');
-        overlay2 = document.getElementById('overlay2');
-        
+        // overlay2 = document.getElementById('overlay2');
+    let canvasOverlay = document.getElementById('canvasOverlay');
+    
         print = document.getElementById('print');
         save = document.getElementById('save');
         bow = document.getElementById('bow');
@@ -27,60 +28,41 @@
         }, function(error){
             // an error occured
         });
- 
+  
+
         // video.addEventListener('play', function() {
         //   //  draw(this, context, 400, 300);
         // }, false);
-        
-        print.addEventListener('click', function(){
-            overlay.src = "uploads/filters/print.png";
-        });
-        heart.addEventListener('click', function(){
-            overlay.src = "uploads/filters/heart.png";
-        });
-        beast.addEventListener('click', function(){
-            overlay.src = "uploads/filters/meme-removebg-preview.png";
-        });
-        starwars .addEventListener('click', function(){
-            overlay2.src = "uploads/filters/starwars.png";
-        });
-        cat.addEventListener('click', function(){
-            overlay2.src = "uploads/filters/cat.png";
-        });
-        ghost.addEventListener('click', function(){
-            overlay2.src = "uploads/filters/ghost.png";
-        });
+        video.addEventListener('canplay', function(){
+            canvasOverlay.width = video.offsetWidth;
+            canvasOverlay.height = video.offsetHeight;
+        })
+        function addSticker(stickerid){
+           document.getElementById(stickerid);
+           stickerobj = new Image;
+           stickerobj.src = "uploads/filters/"+stickerid+".png";
+           canvasOverlay.getContext('2d').drawImage(stickerobj, 0, 0);
+        }
 
         var canvas = document.getElementById('canvas');
             baseimage = canvas.getContext('2d');
-            canvasOverlay = document.getElementById('canvasOverlay');
-            overlayimage = canvasOverlay.getContext('2d');
 
         document.getElementById('capture').addEventListener('click', function(){
             baseimage.drawImage(video, 0, 0, 400, 300);
-            overlayimage.clearRect(0, 0, 100, 100);
-            overlayimage.drawImage(overlay, 0, 0, 100, 100);
-            // overlay.src = "uploads/filters/print.png";
         });
 
         save.addEventListener('click', function(){
             var saved = canvas.toDataURL('image/png');
-            
-            
-           // console.log(saved);
-
+            let stickerURL = canvasOverlay.toDataURL('image/png');
             const url = "camera_process.php";
             var xhttp = new XMLHttpRequest();
-            var values = "baseimage="+saved;
+            var values = "baseimage="+saved+"&stickerURL="+stickerURL;
             xhttp.open("POST", url, true);
             xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             xhttp.onreadystatechange = function(){
-                if(xhttp.readyState == 4 && xhttp.status == 200){
-                    var response = xhttp.responseText;
-                    //console.log(response);
+                if(xhttp.status == 200){
+                    console.log(this.responseText);
                 }
             }
-            //console.log("PHP");
             xhttp.send(values);
         });
-})();

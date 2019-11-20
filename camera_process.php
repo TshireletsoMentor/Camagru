@@ -9,18 +9,24 @@
         redirecto("index");
     }
     $id = $_SESSION['id'];
-    $baseimage = $_POST['baseimage'];
-
-    if(!empty($baseimage)){
+    
+    if(isset($_POST['baseimage']) && isset($_POST['stickerURL'])){
+        $baseimage = $_POST['baseimage'];
+        $stickerurl = $_POST['stickerURL'];
         $baseimage_name = uniqid('', true)."camera".$id.".png";
         $imagepath = "uploads/".$baseimage_name;
         $imgurl = str_replace("data:image/png;base64,", "", $baseimage);
         $imgurl = str_replace(" ", "+", $imgurl);
-        //var_dump($imgurl);
         $imgdecode = base64_decode($imgurl);
-        file_put_contents($imagepath, $imgdecode);
+        $stickerurl = str_replace("data:image/png;base64,", "", $stickerurl);
+        $stickerurl = str_replace(" ", "+", $stickerurl);
+        $stickerdecode = base64_decode($stickerurl);
+        $image = imagecreatefromstring($imgdecode);
+        $sticker = imagecreatefromstring($stickerdecode);
+        imagecopy($image, $sticker, 0, 0, 0, 0, imagesx($image), imagesy($image));
+        imagepng($image, '/goinfre/tmentor/Desktop/Mamp/apache2/htdocs/Camagru/uploads/'.$baseimage_name);
     }
-
+ 
     try{
         ;
     }

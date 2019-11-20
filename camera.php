@@ -38,7 +38,7 @@
         }
     }
 ?>
- 
+  
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -161,12 +161,15 @@
             text-align:center;
         }
         .filters img{
-            padding:2px;
+            padding:3.5px;
             height:50px;
-            width:50px;
+            width:52px;
             border: 2px solid black;
         }
-        
+        #canvasOverlay{
+            position: absolute;
+            bottom: 656px;
+        }
     </style>
 </head>
 <body>
@@ -197,20 +200,17 @@
                         </form>'?>
             <button id="save" class="booth-capture-button">Save</button>
         </div>
-        <canvas id="canvasOverlay" width="100" height="100" style="position:absolute;"></canvas>
-        <img id="overlay" src="" width="100" height="100" alt="" style="position:absolute;">
-        <canvas id="canvasOverlay2" width="400" height="300" style="position:absolute;border:2px solid blue;"></canvas>
-        <img id="overlay2" src="" width="400" height="300" alt="" style="position:absolute;border:2px solid white;">
-        <canvas id="canvas" width="400" height="300" ></canvas>
+        <canvas id="canvasOverlay" width="100" height="100""></canvas>
+        <canvas id="canvas" width="400" height="300" style="border:2px solid blue" ></canvas>
         
         <div class="filters">
             <!-- <img src="uploads/filters/beard.png" alt="beard"> -->
-            <img id="print" src="uploads/filters/print.png"  alt="" width="100" height="100">
-            <img src="uploads/filters/heart.png" id="heart" alt="heart" width="100" height="100">
-            <img src="uploads/filters/meme-removebg-preview.png" id="beast" alt="beast" width="400" height="300">
-            <img src="uploads/filters/starwars.png" id="starwars" alt="starwars" width="100" height="100">
-            <img src="uploads/filters/cat.png" id="cat" alt="cat" width="100" height="100">
-            <img src="uploads/filters/ghost.png" id="ghost" alt="ghost" width="100" height="100">
+            <img id="print" src="uploads/filters/print.png"  alt="" width="100" height="100" onclick="addSticker(this.id)">
+            <img src="uploads/filters/heart.png" id="heart" alt="heart" width="100" height="100" onclick="addSticker(this.id)">
+            <img src="uploads/filters/meme-removebg-preview.png" id="beast" alt="beast" width="400" height="300" onclick="addSticker(this.id)">
+            <img src="uploads/filters/starwars.png" id="starwars" alt="starwars" width="100" height="100" onclick="addSticker(this.id)">
+            <img src="uploads/filters/cat.png" id="cat" alt="cat" width="100" height="100" onclick="addSticker(this.id)">
+            <img src="uploads/filters/ghost.png" id="ghost" alt="ghost" width="100" height="100" onclick="addSticker(this.id)">
         </div>
         <script  src="video.js"></script>
     </div>
