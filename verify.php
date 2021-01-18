@@ -18,9 +18,9 @@ if(!empty($_GET['token'])){
             $result = flashMessage("Your account has already been verified.");
         }
         else{
-            $queryupdate3 = "UPDATE users SET `email` = :email WHERE `id` = :id";
-            $stmtupdate3 = $DB_NAME->prepare($queryupdate3);
-            $stmtupdate3->execute(array(':email' => $email, ':id' => $id));
+            // $queryupdate3 = "UPDATE users SET `email` = :email WHERE `id` = :id";
+            // $stmtupdate3 = $DB_NAME->prepare($queryupdate3);
+            // $stmtupdate3->execute(array(':email' => $email, ':id' => $id));
 
             $query = "UPDATE users SET verified='Y' WHERE id = :id";
             $stmt = $DB_NAME->prepare($query);

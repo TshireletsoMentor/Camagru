@@ -21,7 +21,7 @@
                 echo "<img style='width:100px;height:100px;border-radius: 50%;border: solid 2px black' src='"."$file_display"."?'".mt_rand()."><br>";  
             }
             else{
-                echo "<img style='width:100px;height:100px;border-radius: 50%;border: solid 2px black' src='uploads/default.jpg'>"."<br>";
+                echo "<img style='width:100px;height:100px;border-radius: 50%;border: solid 2px black' src='uploads/default.png'>"."<br>";
             }
         }
         catch (PDOException $err){

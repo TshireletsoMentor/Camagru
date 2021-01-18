@@ -163,9 +163,9 @@
         #canvas{
         }
         #canvasOverlay{
-            position: fixed;
+            position: absolute;
             border:2px solid blue;
-            bottom: 610px;
+            top: 55px;
         }
     </style>
 </head>
@@ -197,8 +197,9 @@
                         </form>'?>
             <button id="save" class="booth-capture-button">Save</button>
         </div>
+
         <canvas id="canvasOverlay" width="400" height="300" style="border:2px solid white;"></canvas>
-        <canvas id="canvas" width="400" height="300" style="border:2px solid blue;" ></canvas>
+        <canvas id="canvas" width="400" height="300" style="border:2px solid black;" ></canvas>
         <!-- <img id="upload" src="" alt="upload"> -->
 
         <div class="filters">

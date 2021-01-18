@@ -36,8 +36,9 @@
         video.addEventListener('canplay', function(){
             canvasOverlay.width = 400;
             canvasOverlay.height = 300;
-            // canvasOverlay.height = video.offsetHeight;
+            //canvasOverlay.height = video.offsetHeight;
         })
+        let sticker;
         function addSticker(stickerid){
            document.getElementById(stickerid);
            stickerobj = new Image;
@@ -60,6 +61,7 @@
             else{
                 canvasOverlay.getContext('2d').drawImage(stickerobj, 0, 0, 100, 100);
             }
+            sticker = stickerobj;
         }
 
         var canvas = document.getElementById('canvas');
@@ -67,6 +69,16 @@
 
         document.getElementById('capture').addEventListener('click', function(){
             baseimage.drawImage(video, 0, 0, 400, 300);
+            canvasOverlay.getContext('2d').clearRect(0, 0, 400, 300);
+            if(sticker){
+              baseimage.drawImage(stickerobj, 0, 0, 400, 300)
+              sticker = '';              
+            }
+        });
+
+        document.getElementById('clear').addEventListener('click', function(){
+            canvasOverlay.getContext('2d').clearRect(0, 0, 400, 300);
+            baseimage.clearRect(0, 0, 400, 300);
         });
 
         save.addEventListener('click', function(){
@@ -79,7 +91,7 @@
             xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             xhttp.onreadystatechange = function(){
                 if(xhttp.status == 200){
-                    console.log(this.responseText);
+                    //console.log(this.responseText);
                 }
             }
             xhttp.send(values);
