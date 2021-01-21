@@ -2,35 +2,8 @@
     include_once "session.php";
     include_once 'logout_auto.php';
     include_once "config/util.php";
-     
-    $id = $_SESSION['id'];
-    if(isset($_POST['upload_pro'])){
-        $file = $_FILES['filepro'];
-        $fileName = $_FILES['filepro']['name'];
-        $fileTmpName= $_FILES['filepro']['tmp_name'];
-        $fileSize = $_FILES['filepro']['size'];
-        $fileError = $_FILES['filepro']['error'];
-        $fileType = $_FILES['filepro']['type'];
+    include_once 'config/connect.php'; 
 
-        $fileExt = explode('.', $fileName);
-        $fileActualExt = strtolower(end($fileExt));
-
-        $allowed = array('jpg', 'jpeg', 'png', 'gif');
-        if(in_array($fileActualExt, $allowed)){
-            if($fileError === 0){
-                if($fileSize < 5000000){
-                    $fileNameNew = $id.".".$fileActualExt;                 
-                }
-                else
-                echo flashMessage("Uploaded file is too large, maximum file size: 5 mb.");
-            }
-            else
-                echo flashMessage("Error uploading file, please try again.");
-        }
-        else{
-            echo flashMessage("Only image files are allowed, these include: 'jpg', 'jpeg', 'png' and 'gif'.");
-        }
-    }
 ?>
   
 <!DOCTYPE html>
@@ -167,6 +140,21 @@
             border:2px solid blue;
             top: 55px;
         }
+        .preview{
+            display: flex;
+            flex-wrap: wrap;
+            padding: 0 4px;
+            margin: 0px 0px 10px 0px;
+        }
+        .preview > div{
+          flex: 15%;
+          border: solid 2px black;
+        }
+        .preview > div img{
+          vertical-align: middle;
+          width: 100%;
+        }
+
     </style>
 </head>
 <body>
@@ -180,7 +168,7 @@
                 <div class="dropdown-content">
                   <a href="private_gallery.php">My Gallery</a>
                   <a href="camera.php">Photo Booth</a>
-                  <a href="reset.php">Update Profile</a>
+                  <a href="reset.php">Update file</a>
                   <a href="logout.php">Logout</a>
                 </div>
                 <?php endif ?>
@@ -192,9 +180,13 @@
         <div style="margin-left:auto;marign-right:auto;">
             <button id="capture" class="booth-capture-button">Take photo</button>
             <button id="clear" class="booth-capture-button">Clear</button>
-            <?php echo '<form action="" method="POST" enctype="multipart/form-data">
-                        <input type="file" id="file-input" name="file">
-                        </form>'?>
+            <?php echo '<input type="file" id="imageLoader" name="file">' ?>
+            <?php
+                  if(isset($result)){
+                    echo $result;
+                  }
+            ?>
+            <br>
             <button id="save" class="booth-capture-button">Save</button>
         </div>
 
@@ -211,6 +203,20 @@
         </div>
         <script  src="video.js"></script>
     </div>
+    <div class="preview">
+    <?php $query = "SELECT * FROM gallery ORDER BY id DESC LIMIT 5";
+            $stmt = $DB_NAME->prepare($query);
+            $stmt->execute();
+            while($row = $stmt->fetch()){
+                echo "<div>
+                        <a href='image.php?id=".$row['id']."'>
+                            <img src='".$row['name']."'>
+                        </a>
+                    </div>";
+            }
+            echo "<hr>";
+    ?>
+    </preview>
 </body>
 <footer> &copy; Copyright tmentor <?php print date("Y")?></footer>
 </html>
